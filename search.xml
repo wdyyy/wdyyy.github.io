@@ -6,18 +6,67 @@
     <content><![CDATA[<p>在 Vite2 与 Vue3 中使用<code>Mockjs</code>时有一些官方文档没有提到的注意点，特意做此记录。</p>
 <span id="more"></span>
 
-<h2 id="1-MockJS-依赖的安装"><a href="#1-MockJS-依赖的安装" class="headerlink" title="1. MockJS 依赖的安装"></a>1. MockJS 依赖的安装</h2><figure class="highlight bash"><table><tr><td class="code"><pre><span class="line"><span class="comment"># 使用 npm 安装</span></span><br><span class="line">npm install mockjs vite-plugin-mock cross-env -D</span><br><span class="line"><span class="comment"># 使用 yarn 安装</span></span><br><span class="line">yarn add mockjs vite-plugin-mock cross-env -D</span><br></pre></td></tr></table></figure>
+<h2 id="1-MockJS-依赖的安装"><a href="#1-MockJS-依赖的安装" class="headerlink" title="1. MockJS 依赖的安装"></a>1. MockJS 依赖的安装</h2><pre><code class="bash"># 使用 npm 安装
+npm install mockjs vite-plugin-mock cross-env -D
+# 使用 yarn 安装
+yarn add mockjs vite-plugin-mock cross-env -D
+</code></pre>
+<h2 id="2-在package-json中设置环境变量"><a href="#2-在package-json中设置环境变量" class="headerlink" title="2. 在package.json中设置环境变量"></a>2. 在<code>package.json</code>中设置环境变量</h2><pre><code class="json">&#123;
+    &quot;scripts&quot;: &#123;
+        // 修改dev构建脚本的命令
+        &quot;dev&quot;: &quot;cross-env NODE_ENV=development vite&quot;,
+        &quot;build&quot;: &quot;vite build&quot;,
+        &quot;serve&quot;: &quot;vite preview&quot;
+    &#125;
+&#125;
+</code></pre>
+<h2 id="3-在vite-config-js中添加-mockjs-插件"><a href="#3-在vite-config-js中添加-mockjs-插件" class="headerlink" title="3. 在vite.config.js中添加 mockjs 插件"></a>3. 在<code>vite.config.js</code>中添加 mockjs 插件</h2><pre><code class="js">import vue from &quot;@vitejs/plugin-vue&quot;;
+import &#123; viteMockServe &#125; from &quot;vite-plugin-mock&quot;;
+import &#123; defineConfig &#125; from &quot;vite&quot;;
 
-<h2 id="2-在package-json中设置环境变量"><a href="#2-在package-json中设置环境变量" class="headerlink" title="2. 在package.json中设置环境变量"></a>2. 在<code>package.json</code>中设置环境变量</h2><figure class="highlight json"><figcaption><span>package.json</span></figcaption><table><tr><td class="code"><pre><span class="line">&#123;</span><br><span class="line">    <span class="attr">&quot;scripts&quot;</span>: &#123;</span><br><span class="line">        <span class="comment">// 修改dev构建脚本的命令</span></span><br><span class="line">        <span class="attr">&quot;dev&quot;</span>: <span class="string">&quot;cross-env NODE_ENV=development vite&quot;</span>,</span><br><span class="line">        <span class="attr">&quot;build&quot;</span>: <span class="string">&quot;vite build&quot;</span>,</span><br><span class="line">        <span class="attr">&quot;serve&quot;</span>: <span class="string">&quot;vite preview&quot;</span></span><br><span class="line">    &#125;</span><br><span class="line">&#125;</span><br></pre></td></tr></table></figure>
-
-<h2 id="3-在vite-config-js中添加-mockjs-插件"><a href="#3-在vite-config-js中添加-mockjs-插件" class="headerlink" title="3. 在vite.config.js中添加 mockjs 插件"></a>3. 在<code>vite.config.js</code>中添加 mockjs 插件</h2><figure class="highlight js"><figcaption><span>vite.config.js</span></figcaption><table><tr><td class="code"><pre><span class="line"><span class="keyword">import</span> vue <span class="keyword">from</span> <span class="string">&quot;@vitejs/plugin-vue&quot;</span>;</span><br><span class="line"><span class="keyword">import</span> &#123; viteMockServe &#125; <span class="keyword">from</span> <span class="string">&quot;vite-plugin-mock&quot;</span>;</span><br><span class="line"><span class="keyword">import</span> &#123; defineConfig &#125; <span class="keyword">from</span> <span class="string">&quot;vite&quot;</span>;</span><br><span class="line"></span><br><span class="line"><span class="keyword">export</span> <span class="keyword">default</span> defineConfig(&#123;</span><br><span class="line">    <span class="attr">plugins</span>: [</span><br><span class="line">        vue(),</span><br><span class="line">        viteMockServe(&#123;</span><br><span class="line">            <span class="attr">supportTs</span>: <span class="literal">false</span></span><br><span class="line">        &#125;)</span><br><span class="line">    ],</span><br><span class="line">&#125;);</span><br></pre></td></tr></table></figure>
-
-<h2 id="4-在项目中创建mock文件夹，在其中创建需要的数据接口"><a href="#4-在项目中创建mock文件夹，在其中创建需要的数据接口" class="headerlink" title="4. 在项目中创建mock文件夹，在其中创建需要的数据接口"></a>4. 在项目中创建<code>mock</code>文件夹，在其中创建需要的数据接口</h2><figure class="highlight js"><figcaption><span>mock/users.js</span></figcaption><table><tr><td class="code"><pre><span class="line"><span class="comment">// 仅做示例: 通过GET请求返回一个名字数组</span></span><br><span class="line"><span class="keyword">export</span> <span class="keyword">default</span> [</span><br><span class="line">    &#123;</span><br><span class="line">        <span class="attr">url</span>: <span class="string">&quot;/api/getUsers&quot;</span>,</span><br><span class="line">        <span class="attr">method</span>: <span class="string">&quot;get&quot;</span>,</span><br><span class="line">        <span class="attr">response</span>: <span class="function">() =&gt;</span> &#123;</span><br><span class="line">            <span class="keyword">return</span> &#123;</span><br><span class="line">                <span class="attr">code</span>: <span class="number">0</span>,</span><br><span class="line">                <span class="attr">message</span>: <span class="string">&quot;ok&quot;</span>,</span><br><span class="line">                <span class="attr">data</span>: [<span class="string">&quot;tom&quot;</span>, <span class="string">&quot;jerry&quot;</span>],</span><br><span class="line">            &#125;;</span><br><span class="line">        &#125;,</span><br><span class="line">    &#125;,</span><br><span class="line">];</span><br></pre></td></tr></table></figure>
-
-<h2 id="5-在项目中使用此接口"><a href="#5-在项目中使用此接口" class="headerlink" title="5. 在项目中使用此接口"></a>5. 在项目中使用此接口</h2><figure class="highlight js"><figcaption><span>app.vue</span></figcaption><table><tr><td class="code"><pre><span class="line">fetch(<span class="string">&quot;/api/getUsers&quot;</span>)</span><br><span class="line">    .then(<span class="function"><span class="params">response</span> =&gt;</span> &#123;</span><br><span class="line">        response.json()</span><br><span class="line">    &#125;)</span><br><span class="line">    .then(<span class="function"><span class="params">data</span> =&gt;</span> &#123;</span><br><span class="line">        <span class="built_in">console</span>.log(data)</span><br><span class="line">    &#125;)</span><br></pre></td></tr></table></figure>
-
+export default defineConfig(&#123;
+    plugins: [
+        vue(),
+        viteMockServe(&#123;
+            supportTs: false
+        &#125;)
+    ],
+&#125;);
+</code></pre>
+<h2 id="4-在项目中创建mock文件夹，在其中创建需要的数据接口"><a href="#4-在项目中创建mock文件夹，在其中创建需要的数据接口" class="headerlink" title="4. 在项目中创建mock文件夹，在其中创建需要的数据接口"></a>4. 在项目中创建<code>mock</code>文件夹，在其中创建需要的数据接口</h2><pre><code class="js">// 仅做示例: 通过GET请求返回一个名字数组
+export default [
+    &#123;
+        url: &quot;/api/getUsers&quot;,
+        method: &quot;get&quot;,
+        response: () =&gt; &#123;
+            return &#123;
+                code: 0,
+                message: &quot;ok&quot;,
+                data: [&quot;tom&quot;, &quot;jerry&quot;],
+            &#125;;
+        &#125;,
+    &#125;,
+];
+</code></pre>
+<h2 id="5-在项目中使用此接口"><a href="#5-在项目中使用此接口" class="headerlink" title="5. 在项目中使用此接口"></a>5. 在项目中使用此接口</h2><pre><code class="js">fetch(&quot;/api/getUsers&quot;)
+    .then(response =&gt; &#123;
+        response.json()
+    &#125;)
+    .then(data =&gt; &#123;
+        console.log(data)
+    &#125;)
+</code></pre>
 <p>会得到如下返回值：</p>
-<figure class="highlight json"><figcaption><span>控制台</span></figcaption><table><tr><td class="code"><pre><span class="line">&#123;</span><br><span class="line">    code: <span class="number">0</span>,</span><br><span class="line">    data: &#123;</span><br><span class="line">        0: <span class="string">&quot;tom&quot;</span>,</span><br><span class="line">        1: <span class="string">&quot;jerry&quot;</span>,</span><br><span class="line">    &#125;,</span><br><span class="line">    length: <span class="number">2</span>,</span><br><span class="line">    message: <span class="string">&quot;ok&quot;</span></span><br><span class="line">&#125;</span><br></pre></td></tr></table></figure>
+<pre><code class="json">&#123;
+    code: 0,
+    data: &#123;
+        0: &quot;tom&quot;,
+        1: &quot;jerry&quot;,
+    &#125;,
+    length: 2,
+    message: &quot;ok&quot;
+&#125;
+</code></pre>
 ]]></content>
       <categories>
         <category>web</category>
@@ -57,9 +106,14 @@
 <hr>
 <details green><summary> ASED相关研究方法 </summary>
               <div class='content'>
-              <ul><li><p><code>等位基因特异性比对</code>：使用 <code>STAR</code> 进行等位基因特异性比对，比对到hg19参考基因组，使用N替换杂合的SNP，使用Ensembl基因注释（release 75），使用的参数如下：</p><figure class="highlight plaintext"><figcaption><span>STAR使用的参数</span></figcaption><table><tr><td class="code"><pre><span class="line">--alignEndsType EndToEnd</span><br><span class="line">--outSAMattributes NH HI NM MD</span><br><span class="line">--outSAMtype BAM Unsorted</span><br><span class="line">--outSJfilterOverhangMin 8 8 8 8 8</span><br><span class="line">--outFilterType BySJout</span><br><span class="line">--outFilterMultimapNmax 20</span><br><span class="line">--outFilterMultimapScoreRange 0</span><br><span class="line">--outFilterMismatchNmax 6</span><br><span class="line">--outFilterIntronMotifs RemoveNoncanonicalUnannotated</span><br><span class="line">--alignIntronMax 300000</span><br></pre></td></tr></table></figure></li><li><p><code>计算等位基因特异的count以及RNA编辑水平</code>：使用作者自己写的脚本拆分两个等位基因上的reads后，使用这个数量计算$\Phi$值，该位点需要满足以下条件：</p><ul><li>两个等位基因的覆盖度都不为零</li><li>最小的RNA编辑水平不低于1%</li><li>该SNP具有至少三个杂合基因型个体</li></ul></li><li><p><code>统计学检验</code>：<code>paired replicate statistical framework</code> 被用来检测RNA编辑信号的可靠性，将两个等位基因看做配对数据，并将具有同一基因型的多个个体看做重复数据，对两个等位基因之间的配对差异进行建模和检验。在10%的FDR下进行计算。</p></li></ul>
+              <ul><li><p><code>等位基因特异性比对</code>：使用 <code>STAR</code> 进行等位基因特异性比对，比对到hg19参考基因组，使用N替换杂合的SNP，使用Ensembl基因注释（release 75），使用的参数如下：</p><pre><code class="text">--alignEndsType EndToEnd--outSAMattributes NH HI NM MD--outSAMtype BAM Unsorted--outSJfilterOverhangMin 8 8 8 8 8--outFilterType BySJout--outFilterMultimapNmax 20--outFilterMultimapScoreRange 0--outFilterMismatchNmax 6--outFilterIntronMotifs RemoveNoncanonicalUnannotated--alignIntronMax 300000</code></pre></li><li><p><code>计算等位基因特异的count以及RNA编辑水平</code>：使用作者自己写的脚本拆分两个等位基因上的reads后，使用这个数量计算$\Phi$值，该位点需要满足以下条件：</p><ul><li>两个等位基因的覆盖度都不为零</li><li>最小的RNA编辑水平不低于1%</li><li>该SNP具有至少三个杂合基因型个体</li></ul></li><li><p><code>统计学检验</code>：<code>paired replicate statistical framework</code> 被用来检测RNA编辑信号的可靠性，将两个等位基因看做配对数据，并将具有同一基因型的多个个体看做重复数据，对两个等位基因之间的配对差异进行建模和检验。在10%的FDR下进行计算。</p></li></ul>
               </div>
             </details>
+
+<h3 id="组织特异的edQTL与ADAR与ADARB1基因表达水平有关"><a href="#组织特异的edQTL与ADAR与ADARB1基因表达水平有关" class="headerlink" title="组织特异的edQTL与ADAR与ADARB1基因表达水平有关"></a>组织特异的edQTL与ADAR与ADARB1基因表达水平有关</h3><p>作者比较了49中组织中的edQTL的效应值大小，发现骨骼肌中的edQTL效应大小相对其他组织较小，接着发现其中的一个变异位于GSR的3’-UTR的反转发夹结构中，此基因在多种组织中都有表达，而且该变异在其他组织中的效应值大小高于骨骼肌。随后发现这些edQTL似乎与RNA的二级结构的改变有关，因此作者预测了这些位点对RNA二级结构的影响，发现这些位点与RNA编辑位点较近且对RNA的二级结构具有一定的影响。</p>
+<p>然后，作者以其中一个变异举例，这个变异在除骨骼肌的其他组织中的效应相对一致，但在骨骼肌中较小，而谷歌集中的ADAR的表达量刚好很，而且这个趋势并非个例。为了探究这种缺失是否是组织特异的，作者采用了上一部分中的公式对前10个RNA编辑位点进行了似然比检验，发现了显著的组织特异性，即与费肌肉组织相比，肌肉组织中的edQTL效应值平均减少了80%。作者还发现另外两种心脏组织中也存在着这种效应值与edQTL的效应值正相关的现象，因此，作者猜测ADAR的低表达水平可以减小edQTL的影响效果。</p>
+<p>作者发现，相对于整体，有一小部分edQTL位点表现出了较大的组织间差异性，因此作者挑选了在组织间差异性较大的一部分RNA编辑位点（变异系数绝对值大于等于1）进行了研究。作者发现这种组织特异的RNA编辑效应大小与遗传变异的关联可能与ADARB1的表达量具有正相关，ADARB1的表达与edQTL的高效应值大小有关。</p>
+<hr>
 ]]></content>
       <categories>
         <category>文献解读</category>
@@ -76,17 +130,17 @@
     <url>/uncategorized/4a6bc6519d3b.html</url>
     <content><![CDATA[<p>Welcome to <a href="https://hexo.io/">Hexo</a>! This is your very first post. Check <a href="https://hexo.io/docs/">documentation</a> for more info. If you get any problems when using Hexo, you can find the answer in <a href="https://hexo.io/docs/troubleshooting.html">troubleshooting</a> or you can ask me on <a href="https://github.com/hexojs/hexo/issues">GitHub</a>.</p>
 <p>这一段话添加于2021年6月</p>
-<h2 id="Quick-Start"><a href="#Quick-Start" class="headerlink" title="Quick Start"></a>Quick Start</h2><h3 id="Create-a-new-post"><a href="#Create-a-new-post" class="headerlink" title="Create a new post"></a>Create a new post</h3><figure class="highlight bash"><figcaption><span>代码</span><a href="https://hexo.io/docs/writing.html">基础命令</a></figcaption><table><tr><td class="code"><pre><span class="line">$ hexo new <span class="string">&quot;My New Post&quot;</span></span><br></pre></td></tr></table></figure>
-
+<h2 id="Quick-Start"><a href="#Quick-Start" class="headerlink" title="Quick Start"></a>Quick Start</h2><h3 id="Create-a-new-post"><a href="#Create-a-new-post" class="headerlink" title="Create a new post"></a>Create a new post</h3><pre><code class="bash">$ hexo new &quot;My New Post&quot;
+</code></pre>
 <p>More info: <a href="https://hexo.io/docs/writing.html">Writing</a></p>
-<h3 id="Run-server"><a href="#Run-server" class="headerlink" title="Run server"></a>Run server</h3><figure class="highlight bash"><table><tr><td class="code"><pre><span class="line">$ hexo server</span><br></pre></td></tr></table></figure>
-
+<h3 id="Run-server"><a href="#Run-server" class="headerlink" title="Run server"></a>Run server</h3><pre><code class="bash">$ hexo server
+</code></pre>
 <p>More info: <a href="https://hexo.io/docs/server.html">Server</a></p>
-<h3 id="Generate-static-files"><a href="#Generate-static-files" class="headerlink" title="Generate static files"></a>Generate static files</h3><figure class="highlight bash"><table><tr><td class="code"><pre><span class="line">$ hexo generate</span><br></pre></td></tr></table></figure>
-
+<h3 id="Generate-static-files"><a href="#Generate-static-files" class="headerlink" title="Generate static files"></a>Generate static files</h3><pre><code class="bash">$ hexo generate
+</code></pre>
 <p>More info: <a href="https://hexo.io/docs/generating.html">Generating</a></p>
-<h3 id="Deploy-to-remote-sites"><a href="#Deploy-to-remote-sites" class="headerlink" title="Deploy to remote sites"></a>Deploy to remote sites</h3><figure class="highlight bash"><table><tr><td class="code"><pre><span class="line">$ hexo deploy</span><br></pre></td></tr></table></figure>
-
+<h3 id="Deploy-to-remote-sites"><a href="#Deploy-to-remote-sites" class="headerlink" title="Deploy to remote sites"></a>Deploy to remote sites</h3><pre><code class="bash">$ hexo deploy
+</code></pre>
 <p>More info: <a href="https://hexo.io/docs/one-command-deployment.html">Deployment</a></p>
 ]]></content>
   </entry>
