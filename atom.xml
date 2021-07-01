@@ -6,7 +6,7 @@
   <link href="https://www.wdyyy.ltd/atom.xml" rel="self"/>
   
   <link href="https://www.wdyyy.ltd/"/>
-  <updated>2021-06-28T16:00:00.000Z</updated>
+  <updated>2021-06-29T16:00:00.000Z</updated>
   <id>https://www.wdyyy.ltd/</id>
   
   <author>
@@ -17,29 +17,33 @@
   <generator uri="https://hexo.io/">Hexo</generator>
   
   <entry>
-    <title>在vite2和Vue3中配置Mockjs</title>
-    <link href="https://www.wdyyy.ltd/web/Vue3/421ae4c87af1.html"/>
-    <id>https://www.wdyyy.ltd/web/Vue3/421ae4c87af1.html</id>
-    <published>2021-06-29T03:45:06.081Z</published>
-    <updated>2021-06-28T16:00:00.000Z</updated>
+    <title>A到I的RNA编辑中的遗传变异与microRNA的靶向可以调节人类转录组</title>
+    <link href="https://www.wdyyy.ltd/%E6%96%87%E7%8C%AE%E8%A7%A3%E8%AF%BB/QTL%E5%88%86%E6%9E%90/27a16a8134c5.html"/>
+    <id>https://www.wdyyy.ltd/%E6%96%87%E7%8C%AE%E8%A7%A3%E8%AF%BB/QTL%E5%88%86%E6%9E%90/27a16a8134c5.html</id>
+    <published>2021-06-29T16:00:00.000Z</published>
+    <updated>2021-06-29T16:00:00.000Z</updated>
     
     
-    <summary type="html">&lt;p&gt;在 Vite2 与 Vue3 中使用&lt;code&gt;Mockjs&lt;/code&gt;时有一些官方文档没有提到的注意点，特意做此记录。&lt;/p&gt;</summary>
+      
+      
+        
+        
+    <summary type="html">&lt;h2 id=&quot;本文的主要结论以及亮点&quot;&gt;&lt;a href=&quot;#本文的主要结论以及亮点&quot; class=&quot;headerlink&quot;</summary>
+        
+      
     
     
     
-    <category term="web" scheme="https://www.wdyyy.ltd/categories/web/"/>
+    <category term="文献解读" scheme="https://www.wdyyy.ltd/categories/%E6%96%87%E7%8C%AE%E8%A7%A3%E8%AF%BB/"/>
     
-    <category term="Vue3" scheme="https://www.wdyyy.ltd/categories/web/Vue3/"/>
+    <category term="QTL分析" scheme="https://www.wdyyy.ltd/categories/%E6%96%87%E7%8C%AE%E8%A7%A3%E8%AF%BB/QTL%E5%88%86%E6%9E%90/"/>
     
     
-    <category term="web" scheme="https://www.wdyyy.ltd/tags/web/"/>
+    <category term="科研思路" scheme="https://www.wdyyy.ltd/tags/%E7%A7%91%E7%A0%94%E6%80%9D%E8%B7%AF/"/>
     
-    <category term="Vue3" scheme="https://www.wdyyy.ltd/tags/Vue3/"/>
+    <category term="文献阅读" scheme="https://www.wdyyy.ltd/tags/%E6%96%87%E7%8C%AE%E9%98%85%E8%AF%BB/"/>
     
-    <category term="Vite2" scheme="https://www.wdyyy.ltd/tags/Vite2/"/>
-    
-    <category term="mockjs" scheme="https://www.wdyyy.ltd/tags/mockjs/"/>
+    <category term="QTL" scheme="https://www.wdyyy.ltd/tags/QTL/"/>
     
   </entry>
   
@@ -61,6 +65,33 @@
     
     
     
+    
+  </entry>
+  
+  <entry>
+    <title>在vite2和Vue3中配置Mockjs</title>
+    <link href="https://www.wdyyy.ltd/web/Vue3/10f067175270.html"/>
+    <id>https://www.wdyyy.ltd/web/Vue3/10f067175270.html</id>
+    <published>2021-06-28T16:00:00.000Z</published>
+    <updated>2021-06-28T16:00:00.000Z</updated>
+    
+    
+    <summary type="html">&lt;p&gt;在 Vite2 与 Vue3 中使用&lt;code&gt;Mockjs&lt;/code&gt;时有一些官方文档没有提到的注意点，特意做此记录。&lt;/p&gt;</summary>
+    
+    
+    
+    <category term="web" scheme="https://www.wdyyy.ltd/categories/web/"/>
+    
+    <category term="Vue3" scheme="https://www.wdyyy.ltd/categories/web/Vue3/"/>
+    
+    
+    <category term="web" scheme="https://www.wdyyy.ltd/tags/web/"/>
+    
+    <category term="Vue3" scheme="https://www.wdyyy.ltd/tags/Vue3/"/>
+    
+    <category term="Vite2" scheme="https://www.wdyyy.ltd/tags/Vite2/"/>
+    
+    <category term="mockjs" scheme="https://www.wdyyy.ltd/tags/mockjs/"/>
     
   </entry>
   
