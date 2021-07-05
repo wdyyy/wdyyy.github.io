@@ -1,6 +1,94 @@
 <?xml version="1.0" encoding="utf-8"?>
 <search>
   <entry>
+    <title>A到I的RNA编辑中的遗传变异与microRNA的靶向可以调节人类转录组</title>
+    <url>/%E6%96%87%E7%8C%AE%E8%A7%A3%E8%AF%BB/QTL%E5%88%86%E6%9E%90/27a16a8134c5.html</url>
+    <content><![CDATA[<p>邢毅教授团队在Genome Biology上发表了一篇名为 <code>A到I的RNA编辑中的遗传变异与microRNA的靶向可以调节人类转录组</code> 的文章，揭示了A-to-I的RNA编辑与遗传变异的关系，并发现RNA编辑与microRNA介导的转录本降解有关，从而在一定程度上调控人类转录组。</p>
+<span id="more"></span>
+
+<h2 id="本文的主要结论以及亮点"><a href="#本文的主要结论以及亮点" class="headerlink" title="本文的主要结论以及亮点"></a>本文的主要结论以及亮点</h2><div class="note "><p>对GTEx中437个个体的49个组织的遗传数据与转录数据进行了分析，确定了个体间的差异RNA编辑事件</p></div>
+<div class="note "><p>使用edQTL方法鉴定了与遗传变异关联的RNA编辑事件，并与eQTL与GWAS做了关联分析，发现ADARB1可以解释部分组织特异edQTL</p></div>
+<div class="note "><p>microRNA可通过microRNA介导的转录物降解过程影响转录物的数量从而导致eQTL的产生，分别通过计算手段和实验手段对此结论进行了验证</p></div>
+
+<h2 id="本文的主要分析以及主要结论"><a href="#本文的主要分析以及主要结论" class="headerlink" title="本文的主要分析以及主要结论"></a>本文的主要分析以及主要结论</h2><h3 id="RNA编辑水平在个体间和组织间具有差异性"><a href="#RNA编辑水平在个体间和组织间具有差异性" class="headerlink" title="RNA编辑水平在个体间和组织间具有差异性"></a>RNA编辑水平在个体间和组织间具有差异性</h3><p>作者使用了GTEx数据库中的来自437个个体的49种组织的变异数据和RNA-seq数据，经过质量控制后，进行了RNA编辑事件的定义。</p>
+<hr>
+<details green><summary> RNA编辑事件的鉴定与筛选 </summary>
+              <div class='content'>
+              <ul><li><p><code>数据来源</code>：转录组数据来自 <code>GTEx数据库</code> 。基因型数据来自 <code>dbGAP</code> 。</p></li><li><p><code>样本量的控制</code>：排除了膀胱、宫颈、输卵管以及K562等样本量比较少的组织。相同个体的相同组织的样本被合并。</p></li><li><p><code>RNA编辑事件的定义</code>：将转录物中的 <strong>G</strong> 定义为编辑后的位点，将 <strong>A</strong> 定义为未编辑位点。</p></li><li><p><code>RNA编辑水平的定义</code>：使用 <code>Samtools</code> 的 <code>mpileup</code> 命令计算每个样本中每个位点上的已编辑位点（转录物中的G的个数）与未编辑位点（转录物中A的个数）的数量。使用公式 $\Phi = G / (A + G)$<br>计算RNA编辑水平，即 <code>编辑后的位点占总位点数的比率</code> 。</p></li><li><p><code>待研究位点的筛选</code>：只研究已被注释的RNA编辑位点，该注释信息从 <code>ATLAS数据库</code> 获得。<br>在进行RNA编辑位点的寻找中，仅研究已被注释的RNA编辑位点，注释文件从ATLAS数据库获得。</p></li></ul>
+              </div>
+            </details>
+
+<h3 id="使用edQTL方法探究了SNP和RNA编辑事件的联系"><a href="#使用edQTL方法探究了SNP和RNA编辑事件的联系" class="headerlink" title="使用edQTL方法探究了SNP和RNA编辑事件的联系"></a>使用edQTL方法探究了SNP和RNA编辑事件的联系</h3><p>作者使用基因型信息与上一步获得的RNA编辑水平数据进行了 <code>edQTL</code> 分析，发现了3117个RNA编辑位点与SNP的基因型显著相关。而且发现的RNA编辑位点数量与样本数量存在一定的线性相关性。</p>
+<hr>
+<details green><summary> edQTL相关研究方法 </summary>
+              <div class='content'>
+              <ul><li><p><code>RNA编辑水平数据的筛选</code>：</p><ol><li>该位点发生编辑事件的reads数大于等于2</li><li>该位点在所有个体中平均至少有10条测序reads</li><li>该位点在所有个体中对应的RNA编辑水平的90%分位数与10%分位数至少有10%的差距（排除没有变化的位点）</li><li>该位点不含变异位点（GTEx、千人基因组和dbSNP）</li><li>样本的最小测序覆盖度不低于20</li></ol></li><li><p><code>SNP的筛选</code>：次等位基因频率大于等于 5%</p></li><li><p><code>edQTL分析</code>：</p><ul><li>使用线性模型（R中的 <code>lm()</code> 函数）</li><li>窗口大小为 <code>400kb</code></li><li>定义关联SNP为 <code>最显著且最近的SNP</code></li><li>定义效应大小为线性拟合的斜率</li><li>显著性阈值为 p &lt; 1e-5，FDR &lt; 10%</li></ul></li></ul><hr><ul><li><p>使用的公式是：</p><p>$$<br>  \Phi_{ij} = \mu_{i} + \alpha Genotype_{i} + \beta Tissue_{j} + \gamma Genotype_{j} * Tissue_{j} + \epsilon_{ij}<br>$$</p><p>其中，$\Phi_{ij}$表示样本 $j$ 中的位点 $i$ 的RNA编辑水平 $Genotype_{j}$ 和 $Tissue_{j}$ 分别表示样本 $j$ 的基因型（0/1/2）和组织类型，其中，组织类型是一个用1/0表示是否是肌肉组织的值，用来检查基因型对于RNA编辑水平的效应是否是组织特异的。方法是使用具有和不具有交互项的结果计算似然比检验。</p></li></ul>
+              </div>
+            </details>
+
+<h3 id="使用-ASED-方法进行了等位基因特异RNA编辑事件的分析"><a href="#使用-ASED-方法进行了等位基因特异RNA编辑事件的分析" class="headerlink" title="使用 ASED 方法进行了等位基因特异RNA编辑事件的分析"></a>使用 <code>ASED</code> 方法进行了等位基因特异RNA编辑事件的分析</h3><p>使用RNA编辑水平数据进行了ASED分析，识别出1986个等位基因特异的RNA编辑位点，加上先前的edQTL结果，一共有4347个独特的位点。edQTL和ASED位点通常在组织之间共享。</p>
+<hr>
+<details green><summary> ASED相关研究方法 </summary>
+              <div class='content'>
+              <ul><li><p><code>等位基因特异性比对</code>：使用 <code>STAR</code> 进行等位基因特异性比对，比对到hg19参考基因组，使用N替换杂合的SNP，使用Ensembl基因注释（release 75），使用的参数如下：</p><pre><code class="text">--alignEndsType EndToEnd--outSAMattributes NH HI NM MD--outSAMtype BAM Unsorted--outSJfilterOverhangMin 8 8 8 8 8--outFilterType BySJout--outFilterMultimapNmax 20--outFilterMultimapScoreRange 0--outFilterMismatchNmax 6--outFilterIntronMotifs RemoveNoncanonicalUnannotated--alignIntronMax 300000</code></pre></li><li><p><code>计算等位基因特异的count以及RNA编辑水平</code>：使用作者自己写的脚本拆分两个等位基因上的reads后，使用这个数量计算$\Phi$值，该位点需要满足以下条件：</p><ul><li>两个等位基因的覆盖度都不为零</li><li>最小的RNA编辑水平不低于1%</li><li>该SNP具有至少三个杂合基因型个体</li></ul></li><li><p><code>统计学检验</code>：<code>paired replicate statistical framework</code> 被用来检测RNA编辑信号的可靠性，将两个等位基因看做配对数据，并将具有同一基因型的多个个体看做重复数据，对两个等位基因之间的配对差异进行建模和检验。在10%的FDR下进行计算。</p></li></ul>
+              </div>
+            </details>
+
+<h3 id="组织特异的edQTL与ADAR与ADARB1基因表达水平有关"><a href="#组织特异的edQTL与ADAR与ADARB1基因表达水平有关" class="headerlink" title="组织特异的edQTL与ADAR与ADARB1基因表达水平有关"></a>组织特异的edQTL与ADAR与ADARB1基因表达水平有关</h3><p>作者比较了49中组织中的edQTL的效应值大小，发现骨骼肌中的edQTL效应大小相对其他组织较小，接着发现其中的一个变异位于GSR的3’-UTR的反转发夹结构中，此基因在多种组织中都有表达，而且该变异在其他组织中的效应值大小高于骨骼肌。随后发现这些edQTL似乎与RNA的二级结构的改变有关，因此作者预测了这些位点对RNA二级结构的影响，发现这些位点与RNA编辑位点较近且对RNA的二级结构具有一定的影响。</p>
+<p>然后，作者以其中一个变异举例，这个变异在除骨骼肌的其他组织中的效应相对一致，但在骨骼肌中较小，而骨骼肌中的ADAR的表达量更低，而且这个趋势并非个例。为了探究这种缺失是否是组织特异的，作者采用了上一部分中的公式对前10个RNA编辑位点进行了似然比检验，发现了显著的组织特异性，即与非肌肉组织相比，肌肉组织中的edQTL效应值平均减少了80%。作者还发现另外两种心脏组织中也存在着这种效应值与edQTL的效应值正相关的现象，因此，作者猜测ADAR的低表达水平可以减小edQTL的影响效果。</p>
+<p>另外，作者还发现，相对于整体，有一小部分edQTL位点表现出了较大的组织间差异性，因此作者挑选了在组织间差异性较大的一部分RNA编辑位点（变异系数绝对值大于等于1）进行了研究。作者发现这种组织特异的RNA编辑效应大小与遗传变异的关联可能与ADARB1的表达量具有正相关，ADARB1的表达与edQTL的高效应值大小有关。</p>
+<hr>
+<details green><summary> 相关研究方法 </summary>
+              <div class='content'>
+              <ul><li><code>RNA二级结构的预测</code>：使用 <code>Vienna RNA package</code> 软件，使用参数 <code>--noClosingGU</code> 将GU配对限制在螺旋的末端，其余参数为默认参数。</li><li><code>反转的Alu重复的寻找</code>：首先寻找Alu重复区域内的RNA编辑位点，然后搜索附近朝向正确的Alu，不具备清晰的配对的Alu重复会被过滤掉。</li><li><code>基因表达相关分析</code>：这部分涉及三类数据，分别是基因表达量数据、eQTL数据和等位基因特异表达量数据，都从GTEx获得。</li></ul>
+              </div>
+            </details>
+
+<h3 id="顺式RNA编辑和microRNA影响DHFR的转录本稳定性"><a href="#顺式RNA编辑和microRNA影响DHFR的转录本稳定性" class="headerlink" title="顺式RNA编辑和microRNA影响DHFR的转录本稳定性"></a>顺式RNA编辑和microRNA影响DHFR的转录本稳定性</h3><p>作者使用 <code>Editome Disease Knowledgebase</code> 数据库进行了查找，发现RNA的编辑可以上调DHFR基因的表达，另一项研究表示miR-125a-3p会靶向DHFR的未编辑的转录本，造成DHFR的表达下降，ADAR介导的RNA编辑事件可以减少 <code>chr5:79923430</code> 处的miRNA靶向调控，从而导致DHFR的表达上调。</p>
+<p>以上是文献中的报道，在本研究中，<code>chr5:79923430</code> 处的RNA编辑位点在三种组织中与变异 <code>rs1650720</code> 相关。然而作者发现此edQTL的关联却不是线性的，即杂合基因型偏离了预期的表达量。基于上述文献报道的内容，作者猜测造成这种结果的原因可能是miRNA对未编辑RNA的靶向降解。而经过与miR-125a-3p水平的比较后发现，这种对线性关系的偏离程度与miR-125a-3p水平有关，同时也说明了edQTL产生了miRNA的eQTL结果。然后就是对上述方法可靠性的论证，包括估计miRNA水平的方法的可行性，以及结论“miRNA可以通过靶向作用影响转录本的稳态水平”的可靠性。</p>
+<hr>
+<details green><summary> 相关研究方法 </summary>
+              <div class='content'>
+              <ul><li><code>线性偏离分析</code>：将edQTL分别用二次模型和线性模型进行了拟合，使用了似然比检验来比较二次模型拟合与线性模型拟合结果的差异显著性。</li><li><code>miRNA表达量的估计</code>：由于GTEx样本无法直接进行miRNA量化，因此作者使用了GTEx的poly-A加尾RNA-seq读数，将这些读数与初级miRNA转录物的切割产物进行比对，然后根据样本中比对读数的总数进行归一化，将归一化后的结果看做miRNA的表达量。对于给定的miRNA，这些值在样本之间进行了标准化，最大值对应1。</li><li><code>miRNA水平估计方法的可行性比较</code>：因为miRNA的表达水平在此研究中是根据GTEx中测序数据间接得到的，作者将这种方法与另外几种方法进行了比较，发现这种代理方法与另外的方法的性能接近，都可以识别组织特异性。而本研究中的方法与qPCR获得的结果有0.55的Spearman相关性。</li><li><code>结论的验证</code><ul><li><code>RNA编辑水平和DHFR表达的共定位分析</code>：使用 <code>coloc</code> 对 <code>chr5:79923430</code> 处的edQTL和DHFR的eQTL进行了共定位分析，结果显示在三种组织中分别获得了较高的后验概率。</li><li><code>对推测机制的结果的模拟</code>：作者模拟了两种情况下的结果，分别是（1）：没有miRNA降解效应和（2）：miRNA降解了未编辑转录本的水平（分别设置为20%、40%和80%）。在第一种情况下，edQTL信号是线性的，而eQTL信号是平坦的（基因型和转录本的稳定性之间没有关联）；第二种情况下，由于miRNA讲解了未编辑的转录本，edQTL信号变得非线性，并且eQTL水平发生了变化，作者又研究了其他情况，得到了类似的结果。</li></ul></li></ul>
+              </div>
+            </details>
+
+<h3 id="edQTL与复杂性状相关"><a href="#edQTL与复杂性状相关" class="headerlink" title="edQTL与复杂性状相关"></a>edQTL与复杂性状相关</h3><p>作者采用了两种方法来研究edQTL对于表型的影响。第一种方法是研究蛋白编码区内的非同义突变带来的影响，这一过程中发现了15个蛋白编码区内的非同义突变。然后举了一个15号染色体的75646086位置的NEIL1基因内的RNA编辑事件会造成基因K242R的改变从而导致DNA修复酶的异常，在edQTL中这个位置的RNA编辑与SNP rs34879829 有关。</p>
+<p>第二种方法是与GWAS位点进行LD筛选，即使用一定的连锁范围对GWAS SNP进行扩展，得到GWAS SNP的连锁区域，然后筛选这个连锁区域内的edQTL。作者在3117个edQTL中发现了700个edQTL与461个GWAS性状相关联。443个 <code>RNA编辑位点</code> 与其 <code>对应的基因的表达水平</code> 在至少一种组织中具有共定位（后验概率大于75%），有131个RNA编辑位点同时与GWAS和表达量关联。</p>
+<hr>
+<details green><summary> 共定位相关研究方法 </summary>
+              <div class='content'>
+              <ul><li><code>GWAS数据的获取</code>：从GWAS catalog获取所有GWAS位点信息，然后转换为hg19版本的位置。</li><li><code>LD的计算</code>：使用 <code>VCFtools</code> 计算edQTL、ASED和GWAS SNP的连锁强度，将GTEx的基因型数据作为参考面板，使用0.8作为阈值对连锁结果进行筛选。使用 <code>Haploview</code> 进行LD结果的可视化。</li><li><code>共定位分析</code>：使用 <code>coloc</code> 软件进行两个性状的共定位分析，使用 <code>moloc</code> 进行三个性状的共定位分析，使用了三种数据，分别是GWAS数据（GWAS catalog）、edQTL数据（研究中生成）和eQTL数据（GTEx）。</li></ul>
+              </div>
+            </details>
+
+<h3 id="RNA编辑事件和miRNA的相互作用"><a href="#RNA编辑事件和miRNA的相互作用" class="headerlink" title="RNA编辑事件和miRNA的相互作用"></a>RNA编辑事件和miRNA的相互作用</h3><p>这一部分的目的是确定通过 miRNA 介导的降解来调节转录水平的顺式调节的 RNA 编辑事件，为此，作者首先鉴定了可能是miRNA靶向目标的RNA编辑位点。首先，作者从来自29个细胞系和27个miRNA的miRNA干扰实验中获得了RNA-seq数据，然后寻找在miRNA受到干扰时会发生变化的RNA编辑位点，发现大多数的miRNA对RNA编辑没有影响。最后，作者鉴定出了7293个潜在的miRNA调控靶点，其中有245个位点与SNP的基因型有显著关联，16个同时与GWAS性状和对应基因的转录水平相关。然后作者介绍了其中一个例子。</p>
+<hr>
+<details green><summary> miRNA干扰相关研究方法 </summary>
+              <div class='content'>
+              <ul><li><code>miRNA干扰分析</code>：使用 <code>STAR</code> 对RNA-seq数据进行比对，使用hg19的参考基因组版本，使用广义线性混合模型来衡量改变的显著性，使用BH算法计算FDR，显著的改变结果被定义为在FDR小于5%下改变了5%的实验结果。</li></ul>
+              </div>
+            </details>
+
+<h3 id="edQTL和miRNA的相互作用可以用来共定位组织特异的edQTL与eQTL"><a href="#edQTL和miRNA的相互作用可以用来共定位组织特异的edQTL与eQTL" class="headerlink" title="edQTL和miRNA的相互作用可以用来共定位组织特异的edQTL与eQTL"></a>edQTL和miRNA的相互作用可以用来共定位组织特异的edQTL与eQTL</h3><p>作者对不同组织中的edQTL、eQTL和miRNA表达数据进行了整合分析，寻找那些miRNA可能在edQTL位点生成eQTL信号的组织特异的edQTL-miRNA对。作者从上文提到的3117个edQTL位点出发，首先在所有组织中进行了edQTL与eQTL的共定位分析，确定了88个组织特异的共定位edQTL，其中42个edQTL位点位于已被注释的3’UTR区，使用 <code>TargetScan</code> 来鉴定特异影响编辑后的mRNA或未编辑的mRNA的miRNA，然后使用GTEx的RNA-seq数据来发现组织特异的miRNA。最后作者鉴定出了8个edQTL，包含了14个edQTL-miRNA配对数据，每一对数据都符合一下条件：（1）至少在一种组织中有着较强的共定位信号（PP4 &gt; 0.75）并且在至少一种组织内不具有共定位信号（PP1 &gt; 0.75）；（2）位于3’UTR内；（3）至少有一种miRNA在共定位和非共定位组织内差异表达（FC &gt; 2）。最后，作者对位点进行了荧光实验验证。</p>
+<hr>
+<details green><summary> 组织特异的共定位QTL鉴定 </summary>
+              <div class='content'>
+              <ul><li><code>组织间的共定位分析</code>：对于3117个edQTL位点，在每一种组织中进行edQTL和eQTL的共定位分析，根据以下条件对结果进行筛选：<ul><li>在至少一种组织中具有显著的共定位信号，PP4 &gt; 0.75，并且</li><li>在至少一种组织中具有显著的非共定位信号，PP1 &gt; 0.75，并且</li><li>edQTL的位点在3’-UTR内，并且</li><li>被miRNA特异靶向编辑，并且此miRNA在上述共定位与非共定位的组织中差异表达（FC &gt; 2）</li></ul></li><li><code>靶向miRNA的鉴定</code>：使用 <code>TargetScan</code> 鉴定miRNA是否对编辑后或未编辑的mRNA具有靶向作用</li><li><code>miRNA的差异表达分析</code>：使用GTEx的RNA-seq数据进行miRNA的表达量分析</li></ul>
+              </div>
+            </details>
+]]></content>
+      <categories>
+        <category>文献解读</category>
+        <category>QTL分析</category>
+      </categories>
+      <tags>
+        <tag>科研思路</tag>
+        <tag>文献阅读</tag>
+        <tag>QTL</tag>
+      </tags>
+  </entry>
+  <entry>
     <title>在vite2和Vue3中配置Mockjs</title>
     <url>/web/Vue3/10f067175270.html</url>
     <content><![CDATA[<p>在 Vite2 与 Vue3 中使用<code>Mockjs</code>时有一些官方文档没有提到的注意点，特意做此记录。</p>
@@ -97,68 +185,5 @@ export default [
 </code></pre>
 <p>More info: <a href="https://hexo.io/docs/one-command-deployment.html">Deployment</a></p>
 ]]></content>
-  </entry>
-  <entry>
-    <title>A到I的RNA编辑中的遗传变异与microRNA的靶向可以调节人类转录组</title>
-    <url>/%E6%96%87%E7%8C%AE%E8%A7%A3%E8%AF%BB/QTL%E5%88%86%E6%9E%90/27a16a8134c5.html</url>
-    <content><![CDATA[<p>邢毅教授团队在Genome Biology上发表了一篇名为 <code>A到I的RNA编辑中的遗传变异与microRNA的靶向可以调节人类转录组</code> 的文章，揭示了A-to-I的RNA编辑与遗传变异的关系，并发现RNA编辑与microRNA介导的转录本降解有关，从而在一定程度上调控人类转录组。</p>
-<span id="more"></span>
-
-<h2 id="本文的主要结论以及亮点"><a href="#本文的主要结论以及亮点" class="headerlink" title="本文的主要结论以及亮点"></a>本文的主要结论以及亮点</h2><div class="note "><p>对GTEx中437个个体的49个组织的遗传数据与转录数据进行了分析，确定了个体间的差异RNA编辑事件</p></div>
-<div class="note "><p>使用edQTL方法鉴定了与遗传变异关联的RNA编辑事件，并与eQTL与GWAS做了关联分析，发现ADARB1可以解释部分组织特异edQTL</p></div>
-<div class="note "><p>microRNA可通过microRNA介导的转录物降解过程影响转录物的数量从而导致eQTL的产生，分别通过计算手段和实验手段对此结论进行了验证</p></div>
-
-<h2 id="本文的主要分析以及主要结论"><a href="#本文的主要分析以及主要结论" class="headerlink" title="本文的主要分析以及主要结论"></a>本文的主要分析以及主要结论</h2><h3 id="RNA编辑水平在个体间和组织间具有差异性"><a href="#RNA编辑水平在个体间和组织间具有差异性" class="headerlink" title="RNA编辑水平在个体间和组织间具有差异性"></a>RNA编辑水平在个体间和组织间具有差异性</h3><p>作者使用了GTEx数据库中的来自437个个体的49种组织的变异数据和RNA-seq数据，经过质量控制后，进行了RNA编辑事件的定义。</p>
-<hr>
-<details green><summary> RNA编辑事件的鉴定与筛选 </summary>
-              <div class='content'>
-              <ul><li><p><code>数据来源</code>：转录组数据来自 <code>GTEx数据库</code> 。基因型数据来自 <code>dbGAP</code> 。</p></li><li><p><code>样本量的控制</code>：排除了膀胱、宫颈、输卵管以及K562等样本量比较少的组织。相同个体的相同组织的样本被合并。</p></li><li><p><code>RNA编辑事件的定义</code>：将转录物中的 <strong>G</strong> 定义为编辑后的位点，将 <strong>A</strong> 定义为未编辑位点。</p></li><li><p><code>RNA编辑水平的定义</code>：使用 <code>Samtools</code> 的 <code>mpileup</code> 命令计算每个样本中每个位点上的已编辑位点（转录物中的G的个数）与未编辑位点（转录物中A的个数）的数量。使用公式 $\Phi = G / (A + G)$<br>计算RNA编辑水平，即 <code>编辑后的位点占总位点数的比率</code> 。</p></li><li><p><code>待研究位点的筛选</code>：只研究已被注释的RNA编辑位点，该注释信息从 <code>ATLAS数据库</code> 获得。<br>在进行RNA编辑位点的寻找中，仅研究已被注释的RNA编辑位点，注释文件从ATLAS数据库获得。</p></li></ul>
-              </div>
-            </details>
-
-<h3 id="使用edQTL方法探究了SNP和RNA编辑事件的联系"><a href="#使用edQTL方法探究了SNP和RNA编辑事件的联系" class="headerlink" title="使用edQTL方法探究了SNP和RNA编辑事件的联系"></a>使用edQTL方法探究了SNP和RNA编辑事件的联系</h3><p>作者使用基因型信息与上一步获得的RNA编辑水平数据进行了 <code>edQTL</code> 分析，发现了3117个RNA编辑位点与SNP的基因型显著相关。而且发现的RNA编辑位点数量与样本数量存在一定的线性相关性。</p>
-<hr>
-<details green><summary> edQTL相关研究方法 </summary>
-              <div class='content'>
-              <ul><li><p><code>RNA编辑水平数据的筛选</code>：</p><ol><li>该位点发生编辑事件的reads数大于等于2</li><li>该位点在所有个体中平均至少有10条测序reads</li><li>该位点在所有个体中对应的RNA编辑水平的90%分位数与10%分位数至少有10%的差距（排除没有变化的位点）</li><li>该位点不含变异位点（GTEx、千人基因组和dbSNP）</li><li>样本的最小测序覆盖度不低于20</li></ol></li><li><p><code>SNP的筛选</code>：次等位基因频率大于等于 5%</p></li><li><p><code>edQTL分析</code>：</p><ul><li>使用线性模型（R中的 <code>lm()</code> 函数）</li><li>窗口大小为 <code>400kb</code></li><li>定义关联SNP为 <code>最显著且最近的SNP</code></li><li>定义效应大小为线性拟合的斜率</li><li>显著性阈值为 p &lt; 1e-5，FDR &lt; 10%</li></ul></li></ul><hr><ul><li><p>使用的公式是：</p><p>$$<br>  \Phi_{ij} = \mu_{i} + \alpha Genotype_{i} + \beta Tissue_{j} + \gamma Genotype_{j} * Tissue_{j} + \epsilon_{ij}<br>$$</p><p>其中，$\Phi_{ij}$表示样本 $j$ 中的位点 $i$ 的RNA编辑水平 $Genotype_{j}$ 和 $Tissue_{j}$ 分别表示样本 $j$ 的基因型（0/1/2）和组织类型，其中，组织类型是一个用1/0表示是否是肌肉组织的值，用来检查基因型对于RNA编辑水平的效应是否是组织特异的。方法是使用具有和不具有交互项的结果计算似然比检验。</p></li></ul>
-              </div>
-            </details>
-
-<h3 id="使用-ASED-方法进行了等位基因特异RNA编辑事件的分析"><a href="#使用-ASED-方法进行了等位基因特异RNA编辑事件的分析" class="headerlink" title="使用 ASED 方法进行了等位基因特异RNA编辑事件的分析"></a>使用 <code>ASED</code> 方法进行了等位基因特异RNA编辑事件的分析</h3><p>使用RNA编辑水平数据进行了ASED分析，识别出1986个等位基因特异的RNA编辑位点，加上先前的edQTL结果，一共有4347个独特的位点。edQTL和ASED位点通常在组织之间共享。</p>
-<hr>
-<details green><summary> ASED相关研究方法 </summary>
-              <div class='content'>
-              <ul><li><p><code>等位基因特异性比对</code>：使用 <code>STAR</code> 进行等位基因特异性比对，比对到hg19参考基因组，使用N替换杂合的SNP，使用Ensembl基因注释（release 75），使用的参数如下：</p><pre><code class="text">--alignEndsType EndToEnd--outSAMattributes NH HI NM MD--outSAMtype BAM Unsorted--outSJfilterOverhangMin 8 8 8 8 8--outFilterType BySJout--outFilterMultimapNmax 20--outFilterMultimapScoreRange 0--outFilterMismatchNmax 6--outFilterIntronMotifs RemoveNoncanonicalUnannotated--alignIntronMax 300000</code></pre></li><li><p><code>计算等位基因特异的count以及RNA编辑水平</code>：使用作者自己写的脚本拆分两个等位基因上的reads后，使用这个数量计算$\Phi$值，该位点需要满足以下条件：</p><ul><li>两个等位基因的覆盖度都不为零</li><li>最小的RNA编辑水平不低于1%</li><li>该SNP具有至少三个杂合基因型个体</li></ul></li><li><p><code>统计学检验</code>：<code>paired replicate statistical framework</code> 被用来检测RNA编辑信号的可靠性，将两个等位基因看做配对数据，并将具有同一基因型的多个个体看做重复数据，对两个等位基因之间的配对差异进行建模和检验。在10%的FDR下进行计算。</p></li></ul>
-              </div>
-            </details>
-
-<h3 id="组织特异的edQTL与ADAR与ADARB1基因表达水平有关"><a href="#组织特异的edQTL与ADAR与ADARB1基因表达水平有关" class="headerlink" title="组织特异的edQTL与ADAR与ADARB1基因表达水平有关"></a>组织特异的edQTL与ADAR与ADARB1基因表达水平有关</h3><p>作者比较了49中组织中的edQTL的效应值大小，发现骨骼肌中的edQTL效应大小相对其他组织较小，接着发现其中的一个变异位于GSR的3’-UTR的反转发夹结构中，此基因在多种组织中都有表达，而且该变异在其他组织中的效应值大小高于骨骼肌。随后发现这些edQTL似乎与RNA的二级结构的改变有关，因此作者预测了这些位点对RNA二级结构的影响，发现这些位点与RNA编辑位点较近且对RNA的二级结构具有一定的影响。</p>
-<p>然后，作者以其中一个变异举例，这个变异在除骨骼肌的其他组织中的效应相对一致，但在骨骼肌中较小，而骨骼肌中的ADAR的表达量更低，而且这个趋势并非个例。为了探究这种缺失是否是组织特异的，作者采用了上一部分中的公式对前10个RNA编辑位点进行了似然比检验，发现了显著的组织特异性，即与非肌肉组织相比，肌肉组织中的edQTL效应值平均减少了80%。作者还发现另外两种心脏组织中也存在着这种效应值与edQTL的效应值正相关的现象，因此，作者猜测ADAR的低表达水平可以减小edQTL的影响效果。</p>
-<p>另外，作者还发现，相对于整体，有一小部分edQTL位点表现出了较大的组织间差异性，因此作者挑选了在组织间差异性较大的一部分RNA编辑位点（变异系数绝对值大于等于1）进行了研究。作者发现这种组织特异的RNA编辑效应大小与遗传变异的关联可能与ADARB1的表达量具有正相关，ADARB1的表达与edQTL的高效应值大小有关。</p>
-<hr>
-<details green open><summary> 相关研究方法 </summary>
-              <div class='content'>
-              <ul><li><code>RNA二级结构的预测</code>：使用 <code>Vienna RNA package</code> 软件，使用参数 <code>--noClosingGU</code> 将GU配对限制在螺旋的末端，其余参数为默认参数。</li><li><code>反转的Alu重复的寻找</code>：首先寻找Alu重复区域内的RNA编辑位点，然后搜索附近朝向正确的Alu，不具备清晰的配对的Alu重复会被过滤掉。</li><li><code>基因表达相关分析</code>：这部分涉及三类数据，分别是基因表达量数据、eQTL数据和等位基因特异表达量数据，都从GTEx获得。</li></ul>
-              </div>
-            </details>
-
-<h3 id="顺式RNA编辑和microRNA影响DHFR的转录本稳定性"><a href="#顺式RNA编辑和microRNA影响DHFR的转录本稳定性" class="headerlink" title="顺式RNA编辑和microRNA影响DHFR的转录本稳定性"></a>顺式RNA编辑和microRNA影响DHFR的转录本稳定性</h3><p>作者使用 <code>Editome Disease Knowledgebase</code> 数据库进行了查找，发现RNA的编辑可以上调DHFR基因的表达，另一项研究表示miR-125a-3p会靶向DHFR的未编辑的转录本，造成DHFR的表达下降，ADAR介导的RNA编辑事件可以减少 <code>chr5:79923430</code> 处的miRNA靶向调控，从而导致DHFR的表达上调。</p>
-<p>以上是文献中的报道，在本研究中，<code>chr5:79923430</code> 处的RNA编辑位点在三种组织中与变异 <code>rs1650720</code> 相关。然而作者发现此edQTL的关联却不是线性的，即杂合基因型偏离了预期的表达量。基于上述文献报道的内容，作者猜测造成这种结果的原因可能是miRNA对未编辑RNA的靶向降解。而经过与miR-125a-3p水平的比较后发现，这种对线性关系的偏离程度与miR-125a-3p水平有关，同时也说明了edQTL产生了miRNA的eQTL结果。然后就是对上述方法可靠性的论证，包括估计miRNA水平的方法的可行性，以及结论“miRNA可以通过靶向作用影响转录本的稳态水平”的可靠性。</p>
-<hr>
-<details green open><summary> 相关研究方法 </summary>
-              <div class='content'>
-              <ul><li><code>线性偏离分析</code>：将edQTL分别用二次模型和线性模型进行了拟合，使用了似然比检验来比较二次模型拟合与线性模型拟合结果的差异显著性。</li><li><code>miRNA水平估计方法的可行性比较</code>：因为miRNA的表达水平在此研究中是根据GTEx中测序数据间接得到的，作者将这种方法与另外几种方法进行了比较，发现这种代理方法与另外的方法的性能接近，都可以识别组织特异性。而本研究中的方法与qPCR获得的结果有0.55的Spearman相关性。</li><li><code>结论的验证</code><ul><li><code>RNA编辑水平和DHFR表达的共定位分析</code>：使用 <code>coloc</code> 对 <code>chr5:79923430</code> 处的edQTL和DHFR的eQTL进行了共定位分析，结果显示在三种组织中分别获得了较高的后验概率。</li><li><code>对推测机制的结果的模拟</code>：作者模拟了两种情况下的结果，分别是（1）：没有miRNA降解效应和（2）：miRNA将未编辑转录本的水平降低了80%。在第一种情况下，edQTL信号是线性的，而eQTL信号是平坦的（基因型和转录本的稳定性之间没有关联）；第二种情况下，由于miRNA讲解了未编辑的转录本，edQTL信号变得非线性，并且eQTL水平发生了变化，作者又研究了其他情况，得到了类似的结果。</li></ul></li></ul>
-              </div>
-            </details>
-]]></content>
-      <categories>
-        <category>文献解读</category>
-        <category>QTL分析</category>
-      </categories>
-      <tags>
-        <tag>科研思路</tag>
-        <tag>文献阅读</tag>
-        <tag>QTL</tag>
-      </tags>
   </entry>
 </search>
