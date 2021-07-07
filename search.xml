@@ -1,6 +1,200 @@
 <?xml version="1.0" encoding="utf-8"?>
 <search>
   <entry>
+    <title>QTL数据的共定位分析</title>
+    <url>/%E7%94%9F%E7%89%A9%E4%BF%A1%E6%81%AF%E5%AD%A6/QTL%E5%88%86%E6%9E%90/6a8b5835f269.html</url>
+    <content><![CDATA[<p>共定位分析是一种用贝叶斯检验来分析两种可能相关的表型是否在给定区域内共享共同的遗传因果变异的方法，本文中，我们使用 <code>coloc</code> 包来进行共定位分析。</p>
+<span id="more"></span>
+
+<h2 id="数据的准备"><a href="#数据的准备" class="headerlink" title="数据的准备"></a>数据的准备</h2><h3 id="MAF的计算"><a href="#MAF的计算" class="headerlink" title="MAF的计算"></a>MAF的计算</h3><p>我们的共定位的目的是为了找出caQTL、eQTL与meQTL的共定位，主角是我们的caQTL数据。coloc需要SNP的次等位基因频率（MAF）以及样本量信息，这两部分信息需要从基因型文件中提取，因此，我们的第一步就是从基因型数据中提取caQTL中的caSNP的次等位基因频率和样本量信息，由于基因型矩阵分别使用0、1、2对AA、Aa和aa进行了编码，因此对于较小频率的突变等位基因a，其等位基因频率为：</p>
+<p>$$<br>AF_{a} = \frac{0N_{AA} + 1N_{Aa} + 2N_{aa}}{2N_{AA} + 2N_{Aa} + 2N_{aa}}，<br>其中N_{AA}、N_{Aa}、N_{aa}分别代表三种基因型的样本数<br>$$</p>
+<p>上面的这个公式实质上等价于基因型矩阵每一行的均值的一半，因此我们可以使用 <code>mean(row) / 2</code> 来计算每一个SNP的alt等位基因频率，然后再判断此频率是否在5%到95%之间。</p>
+<pre><code class="R">library(&quot;readr&quot;)
+library(&quot;tidyverse&quot;)
+
+# 导入原始的caQTL文件
+caqtl_raw = read_tsv(&quot;caqtl_raw.tsv&quot;) %&gt;% distinct(snps, .keep_all = TRUE)
+
+# 导入eQTL文件
+eqtl = read_tsv(&quot;eqtl.tsv&quot;, col_types = cols())
+eqtl_unique = eqtl %&gt;% arrange(`p-value`) %&gt;% distinct(snp, .keep_all = TRUE)
+
+# 计算等位基因频率的函数
+calculate_AF = function(row) &#123;
+    x = as.numeric(row)
+    AF = round(mean(x[!is.na(x)]) / 2, 3)
+    return(min(AF, 1-AF))
+&#125;
+
+# 导入基因型文件并计算MAF
+genotype = read_tsv(&quot;BRCA_genotype&quot;)
+genotype$maf = apply(genotype, 1, calculate_AF)
+
+# 筛选caQTL和eQTL中出现的SNP
+genotype_caqtl = genotype %&gt;% filter(ID %in% caqtl_raw$snps)
+genotype_caqtl = genotype_caqtl[match(caqtl_raw$snps, genotype_caqtl$ID),]
+genotype_caqtl$maf = apply(genotype_caqtl, 1, calculate_AF)
+
+genotype_eqtl = genotype %&gt;%
+    mutate(ID = gsub(&quot;:.*&quot;, &quot;&quot;, ID)) %&gt;%
+    filter(ID %in% intersect(ID, eqtl_unique$snp)) %&gt;%
+    distinct(ID, .keep_all = TRUE)
+eqtl_unique = eqtl_unique %&gt;% filter(snp %in% intersect(snp, genotype_eqtl$ID))
+genotype_eqtl = genotype_eqtl[match(eqtl_unique$snp, genotype_eqtl$ID),]
+genotype_eqtl$maf = apply(genotype_eqtl, 1, calculate_AF)
+</code></pre>
+<h3 id="处理两种QTL的数据为coloc需要的格式"><a href="#处理两种QTL的数据为coloc需要的格式" class="headerlink" title="处理两种QTL的数据为coloc需要的格式"></a>处理两种QTL的数据为coloc需要的格式</h3><p>coloc不接受数据表格式，因此需要将数据包格式的数据转换为列表的格式，对于定量数据，需要以列表的形式指定额外的属性：</p>
+<ol>
+<li><code>type: &quot;quant&quot;</code>：数据的类型</li>
+<li><code>MAF</code>：SNP的次等位基因频率</li>
+<li><code>N</code>：数据的样本量</li>
+</ol>
+<p>数据的处理方式如下：</p>
+<pre><code class="R"># 处理caQTL数据为coloc需要的格式
+caqtl = read_tsv(&quot;caQTL.tsv&quot;, col_types = cols())
+caqtl_clean = caqtl %&gt;%
+    select(caSNP_ID,caSNP_chr,caSNP_pos,std_error,beta,pvalue) %&gt;%
+    mutate(varbeta = std_error^2) %&gt;%
+    select(-std_error) %&gt;%
+    rename(&quot;snp&quot; = caSNP_ID, &quot;p&quot; = pvalue) %&gt;%
+    unite(col = &quot;position&quot;, caSNP_chr,caSNP_pos,sep = &quot;:&quot;) %&gt;%
+    arrange(p) %&gt;%
+    distinct(snp, .keep_all = TRUE) %&gt;%
+    as.list()
+
+# 处理eQTL数据为coloc需要的格式
+eqtl_clean = eqtl_unique %&gt;%
+    rename(&quot;tstat&quot; = &quot;t-stat&quot;, &quot;p&quot; = &quot;p-value&quot;) %&gt;%
+    mutate(varbeta = (beta / tstat) ^ 2) %&gt;%
+    select(snp, chr, position, beta, varbeta, p) %&gt;%
+    unite(col = &quot;position&quot;, chr, position, sep = &quot;:&quot;) %&gt;%
+    arrange(p) %&gt;%
+    distinct(snp, .keep_all = TRUE) %&gt;%
+    as.list()
+
+# 转换为列表格式并加入上一部分的结果
+caqtl_clean$type = &quot;quant&quot;
+caqtl_clean$MAF = genotype_caqtl$maf
+caqtl_clean$N = 74
+eqtl_clean$type = &quot;quant&quot;
+eqtl_clean$MAF = genotype_eqtl$maf
+eqtl_clean$N = 1093
+
+# 检查数据表是否有问题
+check_dataset(caqtl_clean) # NULL
+check_dataset(eqtl_clean) # NULL
+</code></pre>
+<h3 id="coloc分析以及结果解读"><a href="#coloc分析以及结果解读" class="headerlink" title="coloc分析以及结果解读"></a>coloc分析以及结果解读</h3><p>如果数据的检查函数返回 <code>NULL</code> 说明数据没有问题，接着就可以进行共定位分析了，使用的函数是 <code>coloc.abf</code></p>
+<pre><code class="R">coloc_results = coloc.abf(eqtl_clean, caqtl_clean)
+</code></pre>
+<p>根据共定位算法，结果中的后验概率类型包含以下5种，分别是：</p>
+<ul>
+<li><code>H0</code>：两种性状在区域内都没有遗传学关联</li>
+<li><code>H1</code>：只有性状1在区域内具有遗传学关联</li>
+<li><code>H2</code>：只有性状2在区域内具有遗传学关联</li>
+<li><code>H3</code>：两种性状在区域内具有不同的遗传学关联</li>
+<li><code>H4</code>：两种性状在区域内具有同一的遗传学关联（共定位证据）</li>
+</ul>
+<p>我们选取后验概率比较高的点进行查看</p>
+<pre><code class="R">coloc_results$results %&gt;% filter(SNP.PP.H4 &gt; 0.75) %&gt;% select(snp)
+</code></pre>
+<p>发现只有 <code>rs2031947</code> 一个结果，其余的SNP都不显著，我们在caQTL和eQTL数据库中进行寻找，结果如下：</p>
+<div class="gallery " col='3'>
+              <img src="/%E7%94%9F%E7%89%A9%E4%BF%A1%E6%81%AF%E5%AD%A6/QTL%E5%88%86%E6%9E%90/6a8b5835f269/caqtl.png" class="lazyload placeholder" data-srcset="/%E7%94%9F%E7%89%A9%E4%BF%A1%E6%81%AF%E5%AD%A6/QTL%E5%88%86%E6%9E%90/6a8b5835f269/caqtl.png" srcset="https://picbed-1259351214.cos.ap-shanghai.myqcloud.com/blog_assets/loading.gif" class=" lazyload placeholder" title="caQTL"><img src="/%E7%94%9F%E7%89%A9%E4%BF%A1%E6%81%AF%E5%AD%A6/QTL%E5%88%86%E6%9E%90/6a8b5835f269/eqtl.png" class="lazyload placeholder" data-srcset="/%E7%94%9F%E7%89%A9%E4%BF%A1%E6%81%AF%E5%AD%A6/QTL%E5%88%86%E6%9E%90/6a8b5835f269/eqtl.png" srcset="https://picbed-1259351214.cos.ap-shanghai.myqcloud.com/blog_assets/loading.gif" class=" lazyload placeholder" title="eQTL"><img src="/%E7%94%9F%E7%89%A9%E4%BF%A1%E6%81%AF%E5%AD%A6/QTL%E5%88%86%E6%9E%90/6a8b5835f269/meqtl.png" class="lazyload placeholder" data-srcset="/%E7%94%9F%E7%89%A9%E4%BF%A1%E6%81%AF%E5%AD%A6/QTL%E5%88%86%E6%9E%90/6a8b5835f269/meqtl.png" srcset="https://picbed-1259351214.cos.ap-shanghai.myqcloud.com/blog_assets/loading.gif" class=" lazyload placeholder" title="meQTL">
+            </div>
+
+<p>可以看到caQTL和eQTL的趋势比较一致，而与meQTL相反，而且这个SNP对应的基因 <code>GSTM1</code> 曾被预测与多种癌症相关。</p>
+]]></content>
+      <categories>
+        <category>生物信息学</category>
+        <category>QTL分析</category>
+      </categories>
+      <tags>
+        <tag>QTL</tag>
+        <tag>统计学</tag>
+        <tag>生物信息学</tag>
+      </tags>
+  </entry>
+  <entry>
+    <title>在vite2和Vue3中配置Mockjs</title>
+    <url>/web/Vue3/10f067175270.html</url>
+    <content><![CDATA[<p>在 Vite2 与 Vue3 中使用<code>Mockjs</code>时有一些官方文档没有提到的注意点，特意做此记录。</p>
+<span id="more"></span>
+
+<h2 id="1-MockJS-依赖的安装"><a href="#1-MockJS-依赖的安装" class="headerlink" title="1. MockJS 依赖的安装"></a>1. MockJS 依赖的安装</h2><pre><code class="bash"># 使用 npm 安装
+npm install mockjs vite-plugin-mock cross-env -D
+# 使用 yarn 安装
+yarn add mockjs vite-plugin-mock cross-env -D
+</code></pre>
+<h2 id="2-在package-json中设置环境变量"><a href="#2-在package-json中设置环境变量" class="headerlink" title="2. 在package.json中设置环境变量"></a>2. 在<code>package.json</code>中设置环境变量</h2><pre><code class="json">&#123;
+    &quot;scripts&quot;: &#123;
+        // 修改dev构建脚本的命令
+        &quot;dev&quot;: &quot;cross-env NODE_ENV=development vite&quot;,
+        &quot;build&quot;: &quot;vite build&quot;,
+        &quot;serve&quot;: &quot;vite preview&quot;
+    &#125;
+&#125;
+</code></pre>
+<h2 id="3-在vite-config-js中添加-mockjs-插件"><a href="#3-在vite-config-js中添加-mockjs-插件" class="headerlink" title="3. 在vite.config.js中添加 mockjs 插件"></a>3. 在<code>vite.config.js</code>中添加 mockjs 插件</h2><pre><code class="js">import vue from &quot;@vitejs/plugin-vue&quot;;
+import &#123; viteMockServe &#125; from &quot;vite-plugin-mock&quot;;
+import &#123; defineConfig &#125; from &quot;vite&quot;;
+
+export default defineConfig(&#123;
+    plugins: [
+        vue(),
+        viteMockServe(&#123;
+            supportTs: false
+        &#125;)
+    ],
+&#125;);
+</code></pre>
+<h2 id="4-在项目中创建mock文件夹，在其中创建需要的数据接口"><a href="#4-在项目中创建mock文件夹，在其中创建需要的数据接口" class="headerlink" title="4. 在项目中创建mock文件夹，在其中创建需要的数据接口"></a>4. 在项目中创建<code>mock</code>文件夹，在其中创建需要的数据接口</h2><pre><code class="js">// 仅做示例: 通过GET请求返回一个名字数组
+export default [
+    &#123;
+        url: &quot;/api/getUsers&quot;,
+        method: &quot;get&quot;,
+        response: () =&gt; &#123;
+            return &#123;
+                code: 0,
+                message: &quot;ok&quot;,
+                data: [&quot;tom&quot;, &quot;jerry&quot;],
+            &#125;;
+        &#125;,
+    &#125;,
+];
+</code></pre>
+<h2 id="5-在项目中使用此接口"><a href="#5-在项目中使用此接口" class="headerlink" title="5. 在项目中使用此接口"></a>5. 在项目中使用此接口</h2><pre><code class="js">fetch(&quot;/api/getUsers&quot;)
+    .then(response =&gt; &#123;
+        response.json()
+    &#125;)
+    .then(data =&gt; &#123;
+        console.log(data)
+    &#125;)
+</code></pre>
+<p>会得到如下返回值：</p>
+<pre><code class="json">&#123;
+    code: 0,
+    data: &#123;
+        0: &quot;tom&quot;,
+        1: &quot;jerry&quot;,
+    &#125;,
+    length: 2,
+    message: &quot;ok&quot;
+&#125;
+</code></pre>
+]]></content>
+      <categories>
+        <category>web</category>
+        <category>Vue3</category>
+      </categories>
+      <tags>
+        <tag>web</tag>
+        <tag>Vue3</tag>
+        <tag>Vite2</tag>
+        <tag>mockjs</tag>
+      </tags>
+  </entry>
+  <entry>
     <title>A到I的RNA编辑中的遗传变异与microRNA的靶向可以调节人类转录组</title>
     <url>/%E6%96%87%E7%8C%AE%E8%A7%A3%E8%AF%BB/QTL%E5%88%86%E6%9E%90/27a16a8134c5.html</url>
     <content><![CDATA[<p>邢毅教授团队在Genome Biology上发表了一篇名为 <code>A到I的RNA编辑中的遗传变异与microRNA的靶向可以调节人类转录组</code> 的文章，揭示了A-to-I的RNA编辑与遗传变异的关系，并发现RNA编辑与microRNA介导的转录本降解有关，从而在一定程度上调控人类转录组。</p>
@@ -83,88 +277,9 @@
         <category>QTL分析</category>
       </categories>
       <tags>
+        <tag>QTL</tag>
         <tag>科研思路</tag>
         <tag>文献阅读</tag>
-        <tag>QTL</tag>
-      </tags>
-  </entry>
-  <entry>
-    <title>在vite2和Vue3中配置Mockjs</title>
-    <url>/web/Vue3/10f067175270.html</url>
-    <content><![CDATA[<p>在 Vite2 与 Vue3 中使用<code>Mockjs</code>时有一些官方文档没有提到的注意点，特意做此记录。</p>
-<span id="more"></span>
-
-<h2 id="1-MockJS-依赖的安装"><a href="#1-MockJS-依赖的安装" class="headerlink" title="1. MockJS 依赖的安装"></a>1. MockJS 依赖的安装</h2><pre><code class="bash"># 使用 npm 安装
-npm install mockjs vite-plugin-mock cross-env -D
-# 使用 yarn 安装
-yarn add mockjs vite-plugin-mock cross-env -D
-</code></pre>
-<h2 id="2-在package-json中设置环境变量"><a href="#2-在package-json中设置环境变量" class="headerlink" title="2. 在package.json中设置环境变量"></a>2. 在<code>package.json</code>中设置环境变量</h2><pre><code class="json">&#123;
-    &quot;scripts&quot;: &#123;
-        // 修改dev构建脚本的命令
-        &quot;dev&quot;: &quot;cross-env NODE_ENV=development vite&quot;,
-        &quot;build&quot;: &quot;vite build&quot;,
-        &quot;serve&quot;: &quot;vite preview&quot;
-    &#125;
-&#125;
-</code></pre>
-<h2 id="3-在vite-config-js中添加-mockjs-插件"><a href="#3-在vite-config-js中添加-mockjs-插件" class="headerlink" title="3. 在vite.config.js中添加 mockjs 插件"></a>3. 在<code>vite.config.js</code>中添加 mockjs 插件</h2><pre><code class="js">import vue from &quot;@vitejs/plugin-vue&quot;;
-import &#123; viteMockServe &#125; from &quot;vite-plugin-mock&quot;;
-import &#123; defineConfig &#125; from &quot;vite&quot;;
-
-export default defineConfig(&#123;
-    plugins: [
-        vue(),
-        viteMockServe(&#123;
-            supportTs: false
-        &#125;)
-    ],
-&#125;);
-</code></pre>
-<h2 id="4-在项目中创建mock文件夹，在其中创建需要的数据接口"><a href="#4-在项目中创建mock文件夹，在其中创建需要的数据接口" class="headerlink" title="4. 在项目中创建mock文件夹，在其中创建需要的数据接口"></a>4. 在项目中创建<code>mock</code>文件夹，在其中创建需要的数据接口</h2><pre><code class="js">// 仅做示例: 通过GET请求返回一个名字数组
-export default [
-    &#123;
-        url: &quot;/api/getUsers&quot;,
-        method: &quot;get&quot;,
-        response: () =&gt; &#123;
-            return &#123;
-                code: 0,
-                message: &quot;ok&quot;,
-                data: [&quot;tom&quot;, &quot;jerry&quot;],
-            &#125;;
-        &#125;,
-    &#125;,
-];
-</code></pre>
-<h2 id="5-在项目中使用此接口"><a href="#5-在项目中使用此接口" class="headerlink" title="5. 在项目中使用此接口"></a>5. 在项目中使用此接口</h2><pre><code class="js">fetch(&quot;/api/getUsers&quot;)
-    .then(response =&gt; &#123;
-        response.json()
-    &#125;)
-    .then(data =&gt; &#123;
-        console.log(data)
-    &#125;)
-</code></pre>
-<p>会得到如下返回值：</p>
-<pre><code class="json">&#123;
-    code: 0,
-    data: &#123;
-        0: &quot;tom&quot;,
-        1: &quot;jerry&quot;,
-    &#125;,
-    length: 2,
-    message: &quot;ok&quot;
-&#125;
-</code></pre>
-]]></content>
-      <categories>
-        <category>web</category>
-        <category>Vue3</category>
-      </categories>
-      <tags>
-        <tag>web</tag>
-        <tag>Vue3</tag>
-        <tag>Vite2</tag>
-        <tag>mockjs</tag>
       </tags>
   </entry>
   <entry>

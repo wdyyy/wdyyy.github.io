@@ -5,8 +5,6 @@
   <!-- SEO相关 -->
   
     
-      <meta name="robots" content="noindex,follow">
-    
   
   <!-- 渲染优化 -->
   <meta http-equiv='x-dns-prefetch-control' content='on' />
@@ -24,9 +22,13 @@
 
   <!-- 页面元数据 -->
   
-  <title>分类：Vue3 - 冻羊的小屋</title>
+  <title>QTL数据的共定位分析 - 冻羊的小屋</title>
+  
+    <meta name="keywords" content="QTL,统计学,生物信息学">
   
 
+  
+    <meta name="description" content="共定位分析是一种用贝叶斯检验来分析两种可能相关的表型是否在给定区域内共享共同的遗传因果变异的方法，本文中，我们使用 coloc 包来进行共定位分析。">
   
 
   <!-- feed -->
@@ -106,7 +108,7 @@ if (/*@cc_on!@*/false || (!!window.MSInputMethodContext && !!document.documentMo
   <body>
     
 
-<header id="l_header" class="l_header always shadow floatable blur show"  >
+<header id="l_header" class="l_header always shadow floatable blur "  >
   <div class='container'>
   <div id='wrapper'>
     <div class='nav-sub'>
@@ -760,7 +762,7 @@ if (/*@cc_on!@*/false || (!!window.MSInputMethodContext && !!document.documentMo
       <div id="l_cover">
   
     
-        <div id="full" class='cover-wrapper  blank' style="display: none;">
+        <div id="half" class='cover-wrapper post, blank' style="display: ;">
           
             <div id='cover-backstretch'></div>
           
@@ -775,74 +777,267 @@ if (/*@cc_on!@*/false || (!!window.MSInputMethodContext && !!document.documentMo
         <div class="body-wrapper" id="pjax-container">
           
 
-
 <div class='l_main'>
+  <article class="article post white-box reveal md shadow floatable blur article-type-post," id="post," itemscope itemprop="blogPost">
   
+
+
+  
+  <div class="article-meta" id="top">
     
-      
-  <section class="post-list">
     
-      
+    
+      <h1 class="title">
+        QTL数据的共定位分析
+      </h1>
+      <div class='new-meta-box'>
         
           
+            
+<div class='new-meta-item author'>
+  <a class='author' href="/about/" rel="nofollow">
+    <img no-lazy src="https://picbed-1259351214.cos.ap-shanghai.myqcloud.com/blog_assets/avator_head.png">
+    <p>冻羊</p>
+  </a>
+</div>
+
+          
         
-      
-    
-    
-      
-        
-          <div class='post-wrapper'>
-            <div class="post post-v3 white-box reveal shadow floatable blur">
-  
-  
-  
-  
-    
-    <h2 class="article-title" >
-      <a href="/web/Vue3/10f067175270.html">
-        在vite2和Vue3中配置Mockjs
-      </a>
-    </h2>
-  
-  <div class='md'>
-    
-      <p>在 Vite2 与 Vue3 中使用<code>Mockjs</code>时有一些官方文档没有提到的注意点，特意做此记录。</p>
-    
+          
+            
+  <div class='new-meta-item category'>
+    <a class='notlink'>
+      <i class="fas fa-folder-open fa-fw" aria-hidden="true"></i>
+      <a class="category-link" href="/categories/%E7%94%9F%E7%89%A9%E4%BF%A1%E6%81%AF%E5%AD%A6/">生物信息学</a><span class="sep"></span><a class="category-link" href="/categories/%E7%94%9F%E7%89%A9%E4%BF%A1%E6%81%AF%E5%AD%A6/QTL%E5%88%86%E6%9E%90/">QTL分析</a>
+    </a>
   </div>
-  
-    <div class='meta-v3' line_style='solid'>
-      <div>
+
+
+          
         
-        <time>2021-06-29</time>
+          
+            <div class="new-meta-item date">
+  <a class='notlink'>
+    <i class="fas fa-calendar-alt fa-fw" aria-hidden="true"></i>
+    <p>发布于：2021年7月6日</p>
+  </a>
+</div>
+
+          
         
-          <span class="dot"></span>
-          <a class="category-link" href="/categories/web/">web</a><span class="sep"></span><a class="category-link" href="/categories/web/Vue3/">Vue3</a>
+          
+            
+  <div class="new-meta-item browse leancloud">
+    <a class='notlink'>
+      
+      <div id="lc-pv" data-title="QTL数据的共定位分析" data-path="/%E7%94%9F%E7%89%A9%E4%BF%A1%E6%81%AF%E5%AD%A6/QTL%E5%88%86%E6%9E%90/6a8b5835f269.html">
+        <i class="fas fa-eye fa-fw" aria-hidden="true"></i>
+        <span id='number'><i class="fas fa-circle-notch fa-spin fa-fw" aria-hidden="true"></i></span>
+        次浏览
+      </div>
+    </a>
+  </div>
+
+
+          
         
       </div>
+    
+  </div>
+
+
+  
+  
+  <p>共定位分析是一种用贝叶斯检验来分析两种可能相关的表型是否在给定区域内共享共同的遗传因果变异的方法，本文中，我们使用 <code>coloc</code> 包来进行共定位分析。</p>
+<span id="more"></span>
+
+<h2 id="数据的准备"><a href="#数据的准备" class="headerlink" title="数据的准备"></a>数据的准备</h2><h3 id="MAF的计算"><a href="#MAF的计算" class="headerlink" title="MAF的计算"></a>MAF的计算</h3><p>我们的共定位的目的是为了找出caQTL、eQTL与meQTL的共定位，主角是我们的caQTL数据。coloc需要SNP的次等位基因频率（MAF）以及样本量信息，这两部分信息需要从基因型文件中提取，因此，我们的第一步就是从基因型数据中提取caQTL中的caSNP的次等位基因频率和样本量信息，由于基因型矩阵分别使用0、1、2对AA、Aa和aa进行了编码，因此对于较小频率的突变等位基因a，其等位基因频率为：</p>
+<p>$$<br>AF_{a} = \frac{0N_{AA} + 1N_{Aa} + 2N_{aa}}{2N_{AA} + 2N_{Aa} + 2N_{aa}}，<br>其中N_{AA}、N_{Aa}、N_{aa}分别代表三种基因型的样本数<br>$$</p>
+<p>上面的这个公式实质上等价于基因型矩阵每一行的均值的一半，因此我们可以使用 <code>mean(row) / 2</code> 来计算每一个SNP的alt等位基因频率，然后再判断此频率是否在5%到95%之间。</p>
+<pre><code class="R">library(&quot;readr&quot;)
+library(&quot;tidyverse&quot;)
+
+# 导入原始的caQTL文件
+caqtl_raw = read_tsv(&quot;caqtl_raw.tsv&quot;) %&gt;% distinct(snps, .keep_all = TRUE)
+
+# 导入eQTL文件
+eqtl = read_tsv(&quot;eqtl.tsv&quot;, col_types = cols())
+eqtl_unique = eqtl %&gt;% arrange(`p-value`) %&gt;% distinct(snp, .keep_all = TRUE)
+
+# 计算等位基因频率的函数
+calculate_AF = function(row) &#123;
+    x = as.numeric(row)
+    AF = round(mean(x[!is.na(x)]) / 2, 3)
+    return(min(AF, 1-AF))
+&#125;
+
+# 导入基因型文件并计算MAF
+genotype = read_tsv(&quot;BRCA_genotype&quot;)
+genotype$maf = apply(genotype, 1, calculate_AF)
+
+# 筛选caQTL和eQTL中出现的SNP
+genotype_caqtl = genotype %&gt;% filter(ID %in% caqtl_raw$snps)
+genotype_caqtl = genotype_caqtl[match(caqtl_raw$snps, genotype_caqtl$ID),]
+genotype_caqtl$maf = apply(genotype_caqtl, 1, calculate_AF)
+
+genotype_eqtl = genotype %&gt;%
+    mutate(ID = gsub(&quot;:.*&quot;, &quot;&quot;, ID)) %&gt;%
+    filter(ID %in% intersect(ID, eqtl_unique$snp)) %&gt;%
+    distinct(ID, .keep_all = TRUE)
+eqtl_unique = eqtl_unique %&gt;% filter(snp %in% intersect(snp, genotype_eqtl$ID))
+genotype_eqtl = genotype_eqtl[match(eqtl_unique$snp, genotype_eqtl$ID),]
+genotype_eqtl$maf = apply(genotype_eqtl, 1, calculate_AF)
+</code></pre>
+<h3 id="处理两种QTL的数据为coloc需要的格式"><a href="#处理两种QTL的数据为coloc需要的格式" class="headerlink" title="处理两种QTL的数据为coloc需要的格式"></a>处理两种QTL的数据为coloc需要的格式</h3><p>coloc不接受数据表格式，因此需要将数据包格式的数据转换为列表的格式，对于定量数据，需要以列表的形式指定额外的属性：</p>
+<ol>
+<li><code>type: &quot;quant&quot;</code>：数据的类型</li>
+<li><code>MAF</code>：SNP的次等位基因频率</li>
+<li><code>N</code>：数据的样本量</li>
+</ol>
+<p>数据的处理方式如下：</p>
+<pre><code class="R"># 处理caQTL数据为coloc需要的格式
+caqtl = read_tsv(&quot;caQTL.tsv&quot;, col_types = cols())
+caqtl_clean = caqtl %&gt;%
+    select(caSNP_ID,caSNP_chr,caSNP_pos,std_error,beta,pvalue) %&gt;%
+    mutate(varbeta = std_error^2) %&gt;%
+    select(-std_error) %&gt;%
+    rename(&quot;snp&quot; = caSNP_ID, &quot;p&quot; = pvalue) %&gt;%
+    unite(col = &quot;position&quot;, caSNP_chr,caSNP_pos,sep = &quot;:&quot;) %&gt;%
+    arrange(p) %&gt;%
+    distinct(snp, .keep_all = TRUE) %&gt;%
+    as.list()
+
+# 处理eQTL数据为coloc需要的格式
+eqtl_clean = eqtl_unique %&gt;%
+    rename(&quot;tstat&quot; = &quot;t-stat&quot;, &quot;p&quot; = &quot;p-value&quot;) %&gt;%
+    mutate(varbeta = (beta / tstat) ^ 2) %&gt;%
+    select(snp, chr, position, beta, varbeta, p) %&gt;%
+    unite(col = &quot;position&quot;, chr, position, sep = &quot;:&quot;) %&gt;%
+    arrange(p) %&gt;%
+    distinct(snp, .keep_all = TRUE) %&gt;%
+    as.list()
+
+# 转换为列表格式并加入上一部分的结果
+caqtl_clean$type = &quot;quant&quot;
+caqtl_clean$MAF = genotype_caqtl$maf
+caqtl_clean$N = 74
+eqtl_clean$type = &quot;quant&quot;
+eqtl_clean$MAF = genotype_eqtl$maf
+eqtl_clean$N = 1093
+
+# 检查数据表是否有问题
+check_dataset(caqtl_clean) # NULL
+check_dataset(eqtl_clean) # NULL
+</code></pre>
+<h3 id="coloc分析以及结果解读"><a href="#coloc分析以及结果解读" class="headerlink" title="coloc分析以及结果解读"></a>coloc分析以及结果解读</h3><p>如果数据的检查函数返回 <code>NULL</code> 说明数据没有问题，接着就可以进行共定位分析了，使用的函数是 <code>coloc.abf</code></p>
+<pre><code class="R">coloc_results = coloc.abf(eqtl_clean, caqtl_clean)
+</code></pre>
+<p>根据共定位算法，结果中的后验概率类型包含以下5种，分别是：</p>
+<ul>
+<li><code>H0</code>：两种性状在区域内都没有遗传学关联</li>
+<li><code>H1</code>：只有性状1在区域内具有遗传学关联</li>
+<li><code>H2</code>：只有性状2在区域内具有遗传学关联</li>
+<li><code>H3</code>：两种性状在区域内具有不同的遗传学关联</li>
+<li><code>H4</code>：两种性状在区域内具有同一的遗传学关联（共定位证据）</li>
+</ul>
+<p>我们选取后验概率比较高的点进行查看</p>
+<pre><code class="R">coloc_results$results %&gt;% filter(SNP.PP.H4 &gt; 0.75) %&gt;% select(snp)
+</code></pre>
+<p>发现只有 <code>rs2031947</code> 一个结果，其余的SNP都不显著，我们在caQTL和eQTL数据库中进行寻找，结果如下：</p>
+<div class="gallery " col='3'>
+              <img src="/%E7%94%9F%E7%89%A9%E4%BF%A1%E6%81%AF%E5%AD%A6/QTL%E5%88%86%E6%9E%90/6a8b5835f269/caqtl.png" class="lazyload placeholder" data-srcset="/%E7%94%9F%E7%89%A9%E4%BF%A1%E6%81%AF%E5%AD%A6/QTL%E5%88%86%E6%9E%90/6a8b5835f269/caqtl.png" srcset="https://picbed-1259351214.cos.ap-shanghai.myqcloud.com/blog_assets/loading.gif" class=" lazyload placeholder" title="caQTL"><img src="/%E7%94%9F%E7%89%A9%E4%BF%A1%E6%81%AF%E5%AD%A6/QTL%E5%88%86%E6%9E%90/6a8b5835f269/eqtl.png" class="lazyload placeholder" data-srcset="/%E7%94%9F%E7%89%A9%E4%BF%A1%E6%81%AF%E5%AD%A6/QTL%E5%88%86%E6%9E%90/6a8b5835f269/eqtl.png" srcset="https://picbed-1259351214.cos.ap-shanghai.myqcloud.com/blog_assets/loading.gif" class=" lazyload placeholder" title="eQTL"><img src="/%E7%94%9F%E7%89%A9%E4%BF%A1%E6%81%AF%E5%AD%A6/QTL%E5%88%86%E6%9E%90/6a8b5835f269/meqtl.png" class="lazyload placeholder" data-srcset="/%E7%94%9F%E7%89%A9%E4%BF%A1%E6%81%AF%E5%AD%A6/QTL%E5%88%86%E6%9E%90/6a8b5835f269/meqtl.png" srcset="https://picbed-1259351214.cos.ap-shanghai.myqcloud.com/blog_assets/loading.gif" class=" lazyload placeholder" title="meQTL">
+            </div>
+
+<p>可以看到caQTL和eQTL的趋势比较一致，而与meQTL相反，而且这个SNP对应的基因 <code>GSTM1</code> 曾被预测与多种癌症相关。</p>
+
+  
+  
+  
+  
+
+  
+    <div class="prev-next">
       
-        <div>
-          <a class='readmore' href='/web/Vue3/10f067175270.html'>
-            阅读全文
-          </a>
-        </div>
+      
+        <a class='next' href='/%E6%96%87%E7%8C%AE%E8%A7%A3%E8%AF%BB/QTL%E5%88%86%E6%9E%90/27a16a8134c5.html'>
+          <p class='title'>A到I的RNA编辑中的遗传变异与microRNA的靶向可以调节人类转录组<i class="fas fa-chevron-right" aria-hidden="true"></i></p>
+          <p class='content'>邢毅教授团队在Genome Biology上发表了一篇名为 A到I的RNA编辑中的遗传变异与microRNA的靶向可以调节人类转录组 的文章，揭示了A-to-I的RNA编辑与遗传变异的关系，并发...</p>
+        </a>
       
     </div>
   
+</article>
 
+
+  
+
+  <article class="post white-box reveal shadow floatable blur" id="comments">
+    <p ct><i class='fas fa-comments'></i> 评论</p>
+    
+    <div id="valine_container" class="valine_thread">
+  <i class="fas fa-cog fa-spin fa-fw fa-2x"></i>
 </div>
 
-          </div>
-        
-      
-    
-  </section>
-  
-    
-  
+  </article>
 
 
-    
-  
+
+
+
+  <script>
+  // https://github.com/theme-next/hexo-theme-next/blob/master/layout/_third-party/math/mathjax.swig
+  if (typeof MathJax === 'undefined') {
+    window.MathJax = {
+      loader: {
+        source: {
+          '[tex]/amsCd': '[tex]/amscd',
+          '[tex]/AMScd': '[tex]/amscd'
+        }
+      },
+      tex: {
+        inlineMath: {'[+]': [['$', '$']]},
+        tags: 'ams'
+      },
+      options: {
+        renderActions: {
+          findScript: [10, doc => {
+            document.querySelectorAll('script[type^="math/tex"]').forEach(node => {
+              const display = !!node.type.match(/; *mode=display/);
+              const math = new doc.options.MathItem(node.textContent, doc.inputJax[0], display);
+              const text = document.createTextNode('');
+              node.parentNode.replaceChild(text, node);
+              math.start = {node: text, delim: '', n: 0};
+              math.end = {node: text, delim: '', n: 0};
+              doc.math.push(math);
+            });
+          }, '', false],
+          insertedScript: [200, () => {
+            document.querySelectorAll('mjx-container').forEach(node => {
+              let target = node.parentNode;
+              if (target.nodeName.toLowerCase() === 'li') {
+                target.parentNode.classList.add('has-jax');
+              }
+            });
+          }, '', false]
+        }
+      }
+    };
+    (function () {
+      var script = document.createElement('script');
+      script.src = 'https://cdn.jsdelivr.net/npm/mathjax@3.0/es5/tex-mml-chtml.js';
+      script.defer = true;
+      document.head.appendChild(script);
+    })();
+  } else {
+    // 文章章节标题不能为 “MathJax” ，否则会报错。
+    MathJax.startup.document.state(0);
+    MathJax.texReset();
+    MathJax.typeset();
+  }
+</script>
+
+
+
 </div>
 <aside class='l_side'>
   
@@ -850,105 +1045,19 @@ if (/*@cc_on!@*/false || (!!window.MSInputMethodContext && !!document.documentMo
     
     
 
-<section class="widget blogger sshadow floatable blur desktop">
-  <div class='content'>
-    
-      
-        <a class='avatar flat-box rectangle' href='/about/'>
-          <img no-lazy src='https://picbed-1259351214.cos.ap-shanghai.myqcloud.com/blog_assets/avator.png'/>
-        </a>
-      
-    
-    
-      <div class='text'>
-        
-          <h2>冻羊</h2>
-        
-        
-          <img src="https://picbed-1259351214.cos.ap-shanghai.myqcloud.com/blog_assets/wechat_server.gif" class="lazyload placeholder" data-srcset="https://picbed-1259351214.cos.ap-shanghai.myqcloud.com/blog_assets/wechat_server.gif" srcset="https://picbed-1259351214.cos.ap-shanghai.myqcloud.com/blog_assets/loading.gif" height="150px" width="150px">
-        
-        
-          <p><span id="jinrishici-sentence">冻羊的小屋</span></p>
-          <script src="https://sdk.jinrishici.com/v2/browser/jinrishici.js" charset="utf-8"></script>
-        
-      </div>
-    
-    
-  </div>
-</section>
 
-  
 
-  
-    
-    
-  
-
-  <section class="widget category sshadow floatable blur desktop">
+  <section class="widget toc-wrapper sshadow floatable blur desktop mobile" id="toc-div" >
     
   <header>
     
-      <a href='/blog/categories/'><i class="fas fa-folder-open fa-fw" aria-hidden="true"></i><span class='name'>文章分类</span></a>
+      <i class="fas fa-list fa-fw" aria-hidden="true"></i><span class='name'>本文目录</span>
     
   </header>
 
 
     <div class='content'>
-      <ul class="entry navigation">
-        
-          <li><a class="flat-box"
-            title="/categories/web/" href="/categories/web/"
-            id="categoriesweb"
-            ><div class='name'>web</div><div class='badge'>(1)</div></a></li>
-        
-          <li><a class="flat-box child"
-            title="/categories/web/Vue3/" href="/categories/web/Vue3/"
-            id="categorieswebVue3"
-            ><div class='name'>Vue3</div><div class='badge'>(1)</div></a></li>
-        
-          <li><a class="flat-box"
-            title="/categories/%E6%96%87%E7%8C%AE%E8%A7%A3%E8%AF%BB/" href="/categories/%E6%96%87%E7%8C%AE%E8%A7%A3%E8%AF%BB/"
-            id="categoriesE69687E78CAEE8A7A3E8AFBB"
-            ><div class='name'>文献解读</div><div class='badge'>(1)</div></a></li>
-        
-          <li><a class="flat-box child"
-            title="/categories/%E6%96%87%E7%8C%AE%E8%A7%A3%E8%AF%BB/QTL%E5%88%86%E6%9E%90/" href="/categories/%E6%96%87%E7%8C%AE%E8%A7%A3%E8%AF%BB/QTL%E5%88%86%E6%9E%90/"
-            id="categoriesE69687E78CAEE8A7A3E8AFBBQTLE58886E69E90"
-            ><div class='name'>QTL分析</div><div class='badge'>(1)</div></a></li>
-        
-          <li><a class="flat-box"
-            title="/categories/%E7%94%9F%E7%89%A9%E4%BF%A1%E6%81%AF%E5%AD%A6/" href="/categories/%E7%94%9F%E7%89%A9%E4%BF%A1%E6%81%AF%E5%AD%A6/"
-            id="categoriesE7949FE789A9E4BFA1E681AFE5ADA6"
-            ><div class='name'>生物信息学</div><div class='badge'>(1)</div></a></li>
-        
-          <li><a class="flat-box child"
-            title="/categories/%E7%94%9F%E7%89%A9%E4%BF%A1%E6%81%AF%E5%AD%A6/QTL%E5%88%86%E6%9E%90/" href="/categories/%E7%94%9F%E7%89%A9%E4%BF%A1%E6%81%AF%E5%AD%A6/QTL%E5%88%86%E6%9E%90/"
-            id="categoriesE7949FE789A9E4BFA1E681AFE5ADA6QTLE58886E69E90"
-            ><div class='name'>QTL分析</div><div class='badge'>(1)</div></a></li>
-        
-      </ul>
-    </div>
-  </section>
-
-
-  
-
-  
-    
-    
-  
-
-  <section class="widget tagcloud sshadow floatable blur desktop mobile">
-    
-  <header>
-    
-      <a href='/blog/tags/'><i class="fas fa-tags fa-fw" aria-hidden="true"></i><span class='name'>热门标签</span></a>
-    
-  </header>
-
-
-    <div class='content'>
-      <a href="/tags/QTL/" style="font-size: 24px; color: #555">QTL</a> <a href="/tags/Vite2/" style="font-size: 14px; color: #999">Vite2</a> <a href="/tags/Vue3/" style="font-size: 14px; color: #999">Vue3</a> <a href="/tags/mockjs/" style="font-size: 14px; color: #999">mockjs</a> <a href="/tags/web/" style="font-size: 14px; color: #999">web</a> <a href="/tags/%E6%96%87%E7%8C%AE%E9%98%85%E8%AF%BB/" style="font-size: 14px; color: #999">文献阅读</a> <a href="/tags/%E7%94%9F%E7%89%A9%E4%BF%A1%E6%81%AF%E5%AD%A6/" style="font-size: 14px; color: #999">生物信息学</a> <a href="/tags/%E7%A7%91%E7%A0%94%E6%80%9D%E8%B7%AF/" style="font-size: 14px; color: #999">科研思路</a> <a href="/tags/%E7%BB%9F%E8%AE%A1%E5%AD%A6/" style="font-size: 14px; color: #999">统计学</a>
+        <ol class="toc"><li class="toc-item toc-level-2"><a class="toc-link" href="#%E6%95%B0%E6%8D%AE%E7%9A%84%E5%87%86%E5%A4%87"><span class="toc-text">数据的准备</span></a><ol class="toc-child"><li class="toc-item toc-level-3"><a class="toc-link" href="#MAF%E7%9A%84%E8%AE%A1%E7%AE%97"><span class="toc-text">MAF的计算</span></a></li><li class="toc-item toc-level-3"><a class="toc-link" href="#%E5%A4%84%E7%90%86%E4%B8%A4%E7%A7%8DQTL%E7%9A%84%E6%95%B0%E6%8D%AE%E4%B8%BAcoloc%E9%9C%80%E8%A6%81%E7%9A%84%E6%A0%BC%E5%BC%8F"><span class="toc-text">处理两种QTL的数据为coloc需要的格式</span></a></li><li class="toc-item toc-level-3"><a class="toc-link" href="#coloc%E5%88%86%E6%9E%90%E4%BB%A5%E5%8F%8A%E7%BB%93%E6%9E%9C%E8%A7%A3%E8%AF%BB"><span class="toc-text">coloc分析以及结果解读</span></a></li></ol></li></ol>
     </div>
   </section>
 
@@ -957,6 +1066,7 @@ if (/*@cc_on!@*/false || (!!window.MSInputMethodContext && !!document.documentMo
 
 
 </aside>
+
 
 
 		  
@@ -972,7 +1082,7 @@ if (/*@cc_on!@*/false || (!!window.MSInputMethodContext && !!document.documentMo
   // header 这里无论是否开启pjax都需要
   var l_header=document.getElementById("l_header");
   
-  l_header.classList.add("show");
+  l_header.classList.remove("show");
   
   
 </script>
