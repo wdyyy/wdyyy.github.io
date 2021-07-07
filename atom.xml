@@ -6,7 +6,7 @@
   <link href="https://www.wdyyy.ltd/atom.xml" rel="self"/>
   
   <link href="https://www.wdyyy.ltd/"/>
-  <updated>2021-07-07T03:26:02.753Z</updated>
+  <updated>2021-07-07T03:29:12.111Z</updated>
   <id>https://www.wdyyy.ltd/</id>
   
   <author>
@@ -21,7 +21,7 @@
     <link href="https://www.wdyyy.ltd/%E7%94%9F%E7%89%A9%E4%BF%A1%E6%81%AF%E5%AD%A6/QTL%E5%88%86%E6%9E%90/6a8b5835f269.html"/>
     <id>https://www.wdyyy.ltd/%E7%94%9F%E7%89%A9%E4%BF%A1%E6%81%AF%E5%AD%A6/QTL%E5%88%86%E6%9E%90/6a8b5835f269.html</id>
     <published>2021-07-06T10:20:00.000Z</published>
-    <updated>2021-07-07T03:26:02.753Z</updated>
+    <updated>2021-07-07T03:29:12.111Z</updated>
     
     
     <summary type="html">&lt;p&gt;共定位分析是一种用贝叶斯检验来分析两种可能相关的表型是否在给定区域内共享共同的遗传因果变异的方法，本文中，我们使用 &lt;code&gt;coloc&lt;/code&gt; 包来进行共定位分析。&lt;/p&gt;</summary>
