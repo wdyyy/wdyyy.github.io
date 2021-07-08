@@ -853,12 +853,14 @@ if (/*@cc_on!@*/false || (!!window.MSInputMethodContext && !!document.documentMo
   <p>在 Vite2 与 Vue3 中使用<code>Mockjs</code>时有一些官方文档没有提到的注意点，特意做此记录。</p>
 <span id="more"></span>
 
-<h2 id="1-MockJS-依赖的安装"><a href="#1-MockJS-依赖的安装" class="headerlink" title="1. MockJS 依赖的安装"></a>1. MockJS 依赖的安装</h2><pre><code class="bash"># 使用 npm 安装
+<h2 id="1-MockJS-依赖的安装"><a href="#1-MockJS-依赖的安装" class="headerlink" title="1. MockJS 依赖的安装"></a>1. MockJS 依赖的安装</h2><p>mockjs是一个用来拦截Ajax请求的工具，在做开发时，当后端的接口还未完成，前端为了不影响工作效率，可以使用mockjs手动模拟后端接口，得到生成的数据​用来调试。我们首先安装Mockjs​：</p>
+<pre><code class="bash"># 使用 npm 安装
 npm install mockjs vite-plugin-mock cross-env -D
 # 使用 yarn 安装
 yarn add mockjs vite-plugin-mock cross-env -D
 </code></pre>
-<h2 id="2-在package-json中设置环境变量"><a href="#2-在package-json中设置环境变量" class="headerlink" title="2. 在package.json中设置环境变量"></a>2. 在<code>package.json</code>中设置环境变量</h2><pre><code class="json">&#123;
+<h2 id="2-在-package-json-中设置环境变量"><a href="#2-在-package-json-中设置环境变量" class="headerlink" title="2. 在 package.json 中设置环境变量"></a>2. 在 <code>package.json</code> 中设置环境变量</h2><p>使用vite时，需要在项目的包配置中进行环境变量的配置，这里我们使用 <code>cross-env</code> 这个工具，当然首先需要安装，安装的方法与安装mockjs相同。然后修改项目下的包配置文件：</p>
+<pre><code class="json">&#123;
     &quot;scripts&quot;: &#123;
         // 修改dev构建脚本的命令
         &quot;dev&quot;: &quot;cross-env NODE_ENV=development vite&quot;,
@@ -867,7 +869,8 @@ yarn add mockjs vite-plugin-mock cross-env -D
     &#125;
 &#125;
 </code></pre>
-<h2 id="3-在vite-config-js中添加-mockjs-插件"><a href="#3-在vite-config-js中添加-mockjs-插件" class="headerlink" title="3. 在vite.config.js中添加 mockjs 插件"></a>3. 在<code>vite.config.js</code>中添加 mockjs 插件</h2><pre><code class="js">import vue from &quot;@vitejs/plugin-vue&quot;;
+<h2 id="3-在-vite-config-js-中添加-mockjs-插件"><a href="#3-在-vite-config-js-中添加-mockjs-插件" class="headerlink" title="3. 在 vite.config.js 中添加 mockjs 插件"></a>3. 在 <code>vite.config.js</code> 中添加 mockjs 插件</h2><p>我们需要在vite的配置文件中引入mockjs，​方法如下：</p>
+<pre><code class="js">import vue from &quot;@vitejs/plugin-vue&quot;;
 import &#123; viteMockServe &#125; from &quot;vite-plugin-mock&quot;;
 import &#123; defineConfig &#125; from &quot;vite&quot;;
 
@@ -880,7 +883,8 @@ export default defineConfig(&#123;
     ],
 &#125;);
 </code></pre>
-<h2 id="4-在项目中创建mock文件夹，在其中创建需要的数据接口"><a href="#4-在项目中创建mock文件夹，在其中创建需要的数据接口" class="headerlink" title="4. 在项目中创建mock文件夹，在其中创建需要的数据接口"></a>4. 在项目中创建<code>mock</code>文件夹，在其中创建需要的数据接口</h2><pre><code class="js">// 仅做示例: 通过GET请求返回一个名字数组
+<h2 id="4-在项目中创建-mock-文件夹，在其中创建需要的数据接口"><a href="#4-在项目中创建-mock-文件夹，在其中创建需要的数据接口" class="headerlink" title="4. 在项目中创建 mock 文件夹，在其中创建需要的数据接口"></a>4. 在项目中创建 <code>mock</code> 文件夹，在其中创建需要的数据接口</h2><p>配置结束后，我们可以就可以开始数据接口的配置了，这里提供一个示例，返回​两个名字：</p>
+<pre><code class="js">// 仅做示例: 通过GET请求返回一个名字数组
 export default [
     &#123;
         url: &quot;/api/getUsers&quot;,
@@ -895,7 +899,8 @@ export default [
     &#125;,
 ];
 </code></pre>
-<h2 id="5-在项目中使用此接口"><a href="#5-在项目中使用此接口" class="headerlink" title="5. 在项目中使用此接口"></a>5. 在项目中使用此接口</h2><pre><code class="js">fetch(&quot;/api/getUsers&quot;)
+<h2 id="5-在项目中使用此接口"><a href="#5-在项目中使用此接口" class="headerlink" title="5. 在项目中使用此接口"></a>5. 在项目中使用此接口</h2><p>配置好模拟数据接口后，我们就可以在项目中请求这个接口来得到返回的数据了​：</p>
+<pre><code class="js">fetch(&quot;/api/getUsers&quot;)
     .then(response =&gt; &#123;
         response.json()
     &#125;)
@@ -914,6 +919,7 @@ export default [
     message: &quot;ok&quot;
 &#125;
 </code></pre>
+<p>至此，我们就完成了mockjs的配置。</p>
 
   
   
@@ -1079,7 +1085,7 @@ export default [
 
 
     <div class='content'>
-        <ol class="toc"><li class="toc-item toc-level-2"><a class="toc-link" href="#1-MockJS-%E4%BE%9D%E8%B5%96%E7%9A%84%E5%AE%89%E8%A3%85"><span class="toc-text">1. MockJS 依赖的安装</span></a></li><li class="toc-item toc-level-2"><a class="toc-link" href="#2-%E5%9C%A8package-json%E4%B8%AD%E8%AE%BE%E7%BD%AE%E7%8E%AF%E5%A2%83%E5%8F%98%E9%87%8F"><span class="toc-text">2. 在package.json中设置环境变量</span></a></li><li class="toc-item toc-level-2"><a class="toc-link" href="#3-%E5%9C%A8vite-config-js%E4%B8%AD%E6%B7%BB%E5%8A%A0-mockjs-%E6%8F%92%E4%BB%B6"><span class="toc-text">3. 在vite.config.js中添加 mockjs 插件</span></a></li><li class="toc-item toc-level-2"><a class="toc-link" href="#4-%E5%9C%A8%E9%A1%B9%E7%9B%AE%E4%B8%AD%E5%88%9B%E5%BB%BAmock%E6%96%87%E4%BB%B6%E5%A4%B9%EF%BC%8C%E5%9C%A8%E5%85%B6%E4%B8%AD%E5%88%9B%E5%BB%BA%E9%9C%80%E8%A6%81%E7%9A%84%E6%95%B0%E6%8D%AE%E6%8E%A5%E5%8F%A3"><span class="toc-text">4. 在项目中创建mock文件夹，在其中创建需要的数据接口</span></a></li><li class="toc-item toc-level-2"><a class="toc-link" href="#5-%E5%9C%A8%E9%A1%B9%E7%9B%AE%E4%B8%AD%E4%BD%BF%E7%94%A8%E6%AD%A4%E6%8E%A5%E5%8F%A3"><span class="toc-text">5. 在项目中使用此接口</span></a></li></ol>
+        <ol class="toc"><li class="toc-item toc-level-2"><a class="toc-link" href="#1-MockJS-%E4%BE%9D%E8%B5%96%E7%9A%84%E5%AE%89%E8%A3%85"><span class="toc-text">1. MockJS 依赖的安装</span></a></li><li class="toc-item toc-level-2"><a class="toc-link" href="#2-%E5%9C%A8-package-json-%E4%B8%AD%E8%AE%BE%E7%BD%AE%E7%8E%AF%E5%A2%83%E5%8F%98%E9%87%8F"><span class="toc-text">2. 在 package.json 中设置环境变量</span></a></li><li class="toc-item toc-level-2"><a class="toc-link" href="#3-%E5%9C%A8-vite-config-js-%E4%B8%AD%E6%B7%BB%E5%8A%A0-mockjs-%E6%8F%92%E4%BB%B6"><span class="toc-text">3. 在 vite.config.js 中添加 mockjs 插件</span></a></li><li class="toc-item toc-level-2"><a class="toc-link" href="#4-%E5%9C%A8%E9%A1%B9%E7%9B%AE%E4%B8%AD%E5%88%9B%E5%BB%BA-mock-%E6%96%87%E4%BB%B6%E5%A4%B9%EF%BC%8C%E5%9C%A8%E5%85%B6%E4%B8%AD%E5%88%9B%E5%BB%BA%E9%9C%80%E8%A6%81%E7%9A%84%E6%95%B0%E6%8D%AE%E6%8E%A5%E5%8F%A3"><span class="toc-text">4. 在项目中创建 mock 文件夹，在其中创建需要的数据接口</span></a></li><li class="toc-item toc-level-2"><a class="toc-link" href="#5-%E5%9C%A8%E9%A1%B9%E7%9B%AE%E4%B8%AD%E4%BD%BF%E7%94%A8%E6%AD%A4%E6%8E%A5%E5%8F%A3"><span class="toc-text">5. 在项目中使用此接口</span></a></li></ol>
     </div>
   </section>
 
