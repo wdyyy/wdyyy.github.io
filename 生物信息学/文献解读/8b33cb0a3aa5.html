@@ -763,15 +763,16 @@ if (/*@cc_on!@*/false || (!!window.MSInputMethodContext && !!document.documentMo
     <div id="l_body">
       <div id="l_cover">
   
-    
-        <div id="half" class='cover-wrapper post, blank' style="display: ;">
-          
-            <div id='cover-backstretch'></div>
-          
-          
-          <div id="scroll-down" style="display: none;"><i class="fa fa-chevron-down scroll-down-effects"></i></div>
-        </div>
-    
+      
+        
+          <div class="cover-wrapper post, blank" id='half'>
+            
+              <div id='cover-backstretch'></div>
+            
+            
+          </div>
+        
+      
   
   </div>
 
@@ -885,7 +886,7 @@ if (/*@cc_on!@*/false || (!!window.MSInputMethodContext && !!document.documentMo
 <p>接着，作者通过贝叶斯共定位分析对xQTL中的SNP是否影响分子表型做了探究。根据统计学结果将SNP对表观遗传学表型的影响分为了三类，分别是独立影响、表观中介模型、和转录中介模型，分别代表SNP对各种表型的影响之间没有关联、SNP通过影响表观遗传学性状影响基因表达和SNP通过影响基因表达影响表观遗传学性状。</p>
 <details green open><summary> 这部分的研究方法 </summary>
               <div class='content'>
-              <ol><li><p>基因组注释区域的富集分析</p><p> 使用对应组织的 <code>chromHMM</code> 染色体区域注释文件对xQTL进行了富集分析，富集范围取对应QTL的SNP窗口大小，富集背景取窗口内所有非xQTL的SNP，富集结果取对数比值比。</p></li><li><p>SNP与多表型的关联情况分析</p><ul><li><p>共定位分析</p><p>  共定位分析主要采用 $\pi_{1}$ 统计量进行估计，提供SNP的性状为 <code>discovery phenotype</code>， 提供P值的性状为 <code>test phenotype</code> 然后使用 <code>test phenotype</code> 中的QTL的p值和 <code>discovery phenotype</code> 中的SNP进行贝叶斯推断。对于关联到多个性状的SNP，宽松的策略是只保留最显著的关联（会让结果更大），严格的策略是保留所有的关联（会让结果更小），而且在后者中减少SNP和基因的距离阈值时，SNP也会减少从而使显著共定位结果增加。而且这种现象在其他的配对测试中也出现了，因此作者限制SNP为距离表型最近的SNP。</p>  <div class="note quote clear"><p>例如，用基因表达作为测试表型，用甲基化作为发现表型时，测试的SNP列表是在eQTL中出现的mSNP，输入的P值是eQTL中的P值。再将mSNP进行筛选，保留相同SNP-probe中距离最近的。</p></div></li><li><p>  中介分析</p></li></ul></li></ol>
+              <ol><li><p>基因组注释区域的富集分析</p><p> 使用对应组织的 <code>chromHMM</code> 染色体区域注释文件对xQTL进行了富集分析，富集范围取对应QTL的SNP窗口大小，富集背景取窗口内所有非xQTL的SNP，富集结果取对数比值比。</p></li><li><p>SNP与多表型的关联情况分析</p><ul><li><p>共定位分析</p><p>  共定位分析主要采用 $\pi_{1}$ 统计量进行估计，提供SNP的性状为 <code>discovery phenotype</code>， 提供P值的性状为 <code>test phenotype</code> 然后使用 <code>test phenotype</code> 中的QTL的p值和 <code>discovery phenotype</code> 中的SNP进行贝叶斯推断。对于关联到多个性状的SNP，宽松的策略是只保留最显著的关联（会让结果更大），严格的策略是保留所有的关联（会让结果更小），而且在后者中减少SNP和基因的距离阈值时，SNP也会减少从而使显著共定位结果增加。而且这种现象在其他的配对测试中也出现了，因此作者限制SNP为距离表型最近的SNP。</p>  <div class="note quote clear"><p>例如，用基因表达作为测试表型，用甲基化作为发现表型时，测试的SNP列表是在eQTL中出现的<strong>mSNP</strong>，输入的P值是<strong>eQTL中的P值</strong>。对于与多个探针关联的mSNP，只保留与探针距离最小的mSNP。</p></div></li><li><p>中介分析</p><p>  使用因果推断（Causal Inference Test, CIT）对SNP如何影响表型进行分析。作者将eSNP作为因变量，分析了两种模型，分别是 <code>因果模型</code> ，即SNP通过甲基化和组蛋白修饰的改变造成了基因表达的改变，和 <code>响应模型</code>，即SNP通过基因表达的改变引起了甲基化的改变和组蛋白修饰的改变。</p><p>  对于因果模型，使用甲基化和组蛋白修饰作为中间变量，主要使用CIT检验以下四种情况的关联，对于任意一个eQTL中的SNP：</p><ol><li><p> eSNP与其相关的甲基化探针和组蛋白修饰的第一个主成分关联。（检验SNP与中间变量的效应）</p></li><li><p> eSNP与某个基因的表达量关联。（总效应）</p></li><li><p> 该eSNP与以基因表达为条件的表观基因组主成分相关。（考虑中间变量后的总效应）</p></li><li><p> 该eSNP在给定表观性状主成分时独立于基因表达。</p></li></ol><p>  对于响应模型，则把基因表达量和表观性状主成分互换即可，也就是检验：</p><ol><li><p> eSNP与基因表达的第一个主成分关联。</p></li><li><p> eSNP与甲基化程度和/或组蛋白修饰关联。</p></li><li><p> 该eSNP与以表观性状为条件的基因表达主成分相关。</p></li><li><p> 该eSNP在给定表观性状主成分时独立于基因表达。</p></li></ol></li></ul></li></ol>
               </div>
             </details>
 
@@ -2241,106 +2242,6 @@ document.addEventListener("pjax:success", listennSidebarTOC);
 
 <!-- more -->
 
- 
-	   
-	    
-
-
-<script src="https://cdn.jsdelivr.net/npm/pjax@0.2.8/pjax.min.js"></script>
-
-
-<!-- 样式位于：source/css/_third-party/pjaxanimate.styl -->
-
-<div class="pjax-animate">
-  
-    <div class="loading-circle"><div id="loader-circle"></div></div>
-    <script>
-      window.ShowLoading = function() {
-        $(".loading-circle").css("display", "block");
-      };
-      window.HideLoading = function() {
-        $(".loading-circle").css("display", "none");
-      }
-    </script>
-  
-	<script>
-		volantis.pjax.push(window.HideLoading,'HideLoading');
-		volantis.pjax.send(window.ShowLoading,'ShowLoading');
-		volantis.pjax.error(window.HideLoading,'HideLoading');
-	</script>
-</div>
-
-
-<script>
-    var pjax;
-    document.addEventListener('DOMContentLoaded', function () {
-      pjax = new Pjax({
-        elements: 'a[href]:not([href^="#"]):not([href="javascript:void(0)"]):not([pjax-fancybox])',
-        selectors: [
-          "title",
-          "#l_cover",
-          "#pjax-container",
-          "#pjax-header-nav-list"
-        ],
-        cacheBust: false,   // url 地址追加时间戳，用以避免浏览器缓存
-        timeout: 5000
-      });
-    });
-
-    document.addEventListener('pjax:send', function (e) {
-      //window.stop(); // 相当于点击了浏览器的停止按钮
-
-      try {
-        var currentUrl = window.location.pathname;
-        var targetUrl = e.triggerElement.href;
-        var banUrl = ["/talks/"];
-        if (banUrl[0] != "") {
-          banUrl.forEach(item => {
-            if(currentUrl.indexOf(item) != -1 || targetUrl.indexOf(item) != -1) {
-              window.location.href = targetUrl;
-            }
-          });
-        }
-      } catch (error) {}
-
-      window.subData = null; // 移除标题（用于一二级导航栏切换处）
-
-      volantis.$switcher.removeClass('active'); // 关闭移动端激活的搜索框
-      volantis.$header.removeClass('z_search-open'); // 关闭移动端激活的搜索框
-      volantis.$wrapper.removeClass('sub'); // 跳转页面时关闭二级导航
-
-      // 解绑事件 避免重复监听
-      volantis.$topBtn.unbind('click');
-      $('.menu a').unbind('click');
-      $(window).unbind('resize');
-      $(window).unbind('scroll');
-      $(document).unbind('scroll');
-      $(document).unbind('click');
-      $('body').unbind('click');
-	  // 使用 volantis.pjax.send 方法传入pjax:send回调函数 参见layout/_partial/scripts/global.ejs
-	  volantis.pjax.method.send.start();
-    });
-
-    document.addEventListener('pjax:complete', function () {
-      $('.nav-main').find('.list-v').not('.menu-phone').removeAttr("style",""); // 移除小尾巴的移除
-      $('.menu-phone.list-v').removeAttr("style",""); // 移除小尾巴的移除
-      $('script[data-pjax], .pjax-reload script').each(function () {
-        $(this).parent().append($(this).remove());
-      });
-      try{
-		// 使用 volantis.pjax.push 方法传入重载函数 参见layout/_partial/scripts/global.ejs
-		volantis.pjax.method.complete.start();
-      } catch (e) {
-        console.log(e);
-      }
-    });
-
-    document.addEventListener('pjax:error', function (e) {
-	  // 使用 volantis.pjax.error 方法传入pjax:error回调函数 参见layout/_partial/scripts/global.ejs
-	  volantis.pjax.method.error.start();
-      window.location.href = e.triggerElement.href;
-    });
-</script>
  
 	  
     </div>
