@@ -22,9 +22,13 @@
 
   <!-- 页面元数据 -->
   
-  <title>Hello World - 冻羊的小屋</title>
+  <title>在vite2和Vue3中配置Mockjs - 冻羊的小屋</title>
+  
+    <meta name="keywords" content="Vue3,Vite2,mockjs">
   
 
+  
+    <meta name="description" content="在 Vite2 与 Vue3 中使用Mockjs时有一些官方文档没有提到的注意点，特意做此记录。">
   
 
   <!-- feed -->
@@ -37,7 +41,7 @@
 
   <!-- link -->
   
-    <link rel="shortcut icon" type='image/x-icon' href="https://picbed-1259351214.cos.ap-shanghai.myqcloud.com/blog_assets/favicon.ico">
+    <link rel="shortcut icon" type='image/x-icon' href="https://cdn.jsdelivr.net/gh/wdyyy/blog_img@1.0/favicon.ico">
   
 
   <!-- import link -->
@@ -123,7 +127,7 @@ if (/*@cc_on!@*/false || (!!window.MSInputMethodContext && !!document.documentMo
         
         <a class="title flat-box" target="_self" href='/'>
           
-            <img no-lazy class='logo' src='https://picbed-1259351214.cos.ap-shanghai.myqcloud.com/blog_assets/avator_head.png'/>
+            <img no-lazy class='logo' src='https://cdn.jsdelivr.net/gh/wdyyy/blog_img@1.0/avator_head.png'/>
           
           
           
@@ -786,7 +790,7 @@ if (/*@cc_on!@*/false || (!!window.MSInputMethodContext && !!document.documentMo
     
     
       <h1 class="title">
-        Hello World
+        在vite2和Vue3中配置Mockjs
       </h1>
       <div class='new-meta-box'>
         
@@ -794,7 +798,7 @@ if (/*@cc_on!@*/false || (!!window.MSInputMethodContext && !!document.documentMo
             
 <div class='new-meta-item author'>
   <a class='author' href="/about/" rel="nofollow">
-    <img no-lazy src="https://picbed-1259351214.cos.ap-shanghai.myqcloud.com/blog_assets/avator_head.png">
+    <img no-lazy src="https://cdn.jsdelivr.net/gh/wdyyy/blog_img@1.0/avator_head.png">
     <p>冻羊</p>
   </a>
 </div>
@@ -803,6 +807,13 @@ if (/*@cc_on!@*/false || (!!window.MSInputMethodContext && !!document.documentMo
         
           
             
+  <div class='new-meta-item category'>
+    <a class='notlink'>
+      <i class="fas fa-folder-open fa-fw" aria-hidden="true"></i>
+      <a class="category-link" href="/categories/web%E5%BC%80%E5%8F%91/">web开发</a><span class="sep"></span><a class="category-link" href="/categories/web%E5%BC%80%E5%8F%91/Vue3/">Vue3</a>
+    </a>
+  </div>
+
 
           
         
@@ -821,7 +832,7 @@ if (/*@cc_on!@*/false || (!!window.MSInputMethodContext && !!document.documentMo
   <div class="new-meta-item browse leancloud">
     <a class='notlink'>
       
-      <div id="lc-pv" data-title="Hello World" data-path="/uncategorized/4a6bc6519d3b.html">
+      <div id="lc-pv" data-title="在vite2和Vue3中配置Mockjs" data-path="/web%E5%BC%80%E5%8F%91/Vue3/10f067175270.html">
         <i class="fas fa-eye fa-fw" aria-hidden="true"></i>
         <span id='number'><i class="fas fa-circle-notch fa-spin fa-fw" aria-hidden="true"></i></span>
         次浏览
@@ -839,20 +850,76 @@ if (/*@cc_on!@*/false || (!!window.MSInputMethodContext && !!document.documentMo
 
   
   
-  <p>Welcome to <a target="_blank" rel="noopener" href="https://hexo.io/">Hexo</a>! This is your very first post. Check <a target="_blank" rel="noopener" href="https://hexo.io/docs/">documentation</a> for more info. If you get any problems when using Hexo, you can find the answer in <a target="_blank" rel="noopener" href="https://hexo.io/docs/troubleshooting.html">troubleshooting</a> or you can ask me on <a target="_blank" rel="noopener" href="https://github.com/hexojs/hexo/issues">GitHub</a>.</p>
-<p>这一段话添加于2021年6月</p>
-<h2 id="Quick-Start"><a href="#Quick-Start" class="headerlink" title="Quick Start"></a>Quick Start</h2><h3 id="Create-a-new-post"><a href="#Create-a-new-post" class="headerlink" title="Create a new post"></a>Create a new post</h3><pre><code class="bash">$ hexo new &quot;My New Post&quot;
+  <p>在 Vite2 与 Vue3 中使用<code>Mockjs</code>时有一些官方文档没有提到的注意点，特意做此记录。</p>
+<span id="more"></span>
+
+<h2 id="MockJS-依赖的安装"><a href="#MockJS-依赖的安装" class="headerlink" title="MockJS 依赖的安装"></a>MockJS 依赖的安装</h2><p>mockjs是一个用来拦截Ajax请求的工具，在做开发时，当后端的接口还未完成，前端为了不影响工作效率，可以使用mockjs手动模拟后端接口，得到生成的数据​用来调试。我们首先安装Mockjs​：</p>
+<pre><code class="bash"># 使用 npm 安装
+npm install mockjs vite-plugin-mock cross-env -D
+# 使用 yarn 安装
+yarn add mockjs vite-plugin-mock cross-env -D
 </code></pre>
-<p>More info: <a target="_blank" rel="noopener" href="https://hexo.io/docs/writing.html">Writing</a></p>
-<h3 id="Run-server"><a href="#Run-server" class="headerlink" title="Run server"></a>Run server</h3><pre><code class="bash">$ hexo server
+<h2 id="在-package-json-中设置环境变量"><a href="#在-package-json-中设置环境变量" class="headerlink" title="在 package.json 中设置环境变量"></a>在 <code>package.json</code> 中设置环境变量</h2><p>使用vite时，需要在项目的包配置中进行环境变量的配置，这里我们使用 <code>cross-env</code> 这个工具，当然首先需要安装，安装的方法与安装mockjs相同。然后修改项目下的包配置文件：</p>
+<pre><code class="json">&#123;
+    &quot;scripts&quot;: &#123;
+        // 修改dev构建脚本的命令
+        &quot;dev&quot;: &quot;cross-env NODE_ENV=development vite&quot;,
+        &quot;build&quot;: &quot;vite build&quot;,
+        &quot;serve&quot;: &quot;vite preview&quot;
+    &#125;
+&#125;
 </code></pre>
-<p>More info: <a target="_blank" rel="noopener" href="https://hexo.io/docs/server.html">Server</a></p>
-<h3 id="Generate-static-files"><a href="#Generate-static-files" class="headerlink" title="Generate static files"></a>Generate static files</h3><pre><code class="bash">$ hexo generate
+<h2 id="在-vite-config-js-中添加-mockjs-插件"><a href="#在-vite-config-js-中添加-mockjs-插件" class="headerlink" title="在 vite.config.js 中添加 mockjs 插件"></a>在 <code>vite.config.js</code> 中添加 mockjs 插件</h2><p>我们需要在vite的配置文件中引入mockjs，​方法如下：</p>
+<pre><code class="js">import vue from &quot;@vitejs/plugin-vue&quot;;
+import &#123; viteMockServe &#125; from &quot;vite-plugin-mock&quot;;
+import &#123; defineConfig &#125; from &quot;vite&quot;;
+
+export default defineConfig(&#123;
+    plugins: [
+        vue(),
+        viteMockServe(&#123;
+            supportTs: false
+        &#125;)
+    ],
+&#125;);
 </code></pre>
-<p>More info: <a target="_blank" rel="noopener" href="https://hexo.io/docs/generating.html">Generating</a></p>
-<h3 id="Deploy-to-remote-sites"><a href="#Deploy-to-remote-sites" class="headerlink" title="Deploy to remote sites"></a>Deploy to remote sites</h3><pre><code class="bash">$ hexo deploy
+<h2 id="在项目中创建-mock-文件夹，在其中创建需要的数据接口"><a href="#在项目中创建-mock-文件夹，在其中创建需要的数据接口" class="headerlink" title="在项目中创建 mock 文件夹，在其中创建需要的数据接口"></a>在项目中创建 <code>mock</code> 文件夹，在其中创建需要的数据接口</h2><p>配置结束后，我们可以就可以开始数据接口的配置了，这里提供一个示例，返回​两个名字：</p>
+<pre><code class="js">// 仅做示例: 通过GET请求返回一个名字数组
+export default [
+    &#123;
+        url: &quot;/api/getUsers&quot;,
+        method: &quot;get&quot;,
+        response: () =&gt; &#123;
+            return &#123;
+                code: 0,
+                message: &quot;ok&quot;,
+                data: [&quot;tom&quot;, &quot;jerry&quot;],
+            &#125;;
+        &#125;,
+    &#125;,
+];
 </code></pre>
-<p>More info: <a target="_blank" rel="noopener" href="https://hexo.io/docs/one-command-deployment.html">Deployment</a></p>
+<h2 id="在项目中使用此接口"><a href="#在项目中使用此接口" class="headerlink" title="在项目中使用此接口"></a>在项目中使用此接口</h2><p>配置好模拟数据接口后，我们就可以在项目中请求这个接口来得到返回的数据了​：</p>
+<pre><code class="js">fetch(&quot;/api/getUsers&quot;)
+    .then(response =&gt; &#123;
+        response.json()
+    &#125;)
+    .then(data =&gt; &#123;
+        console.log(data)
+    &#125;)
+</code></pre>
+<p>会得到如下返回值：</p>
+<pre><code class="json">&#123;
+    code: 0,
+    data: &#123;
+        0: &quot;tom&quot;,
+        1: &quot;jerry&quot;,
+    &#125;,
+    length: 2,
+    message: &quot;ok&quot;
+&#125;
+</code></pre>
+<p>至此，我们就完成了mockjs的配置。</p>
 
   
   
@@ -870,7 +937,7 @@ if (/*@cc_on!@*/false || (!!window.MSInputMethodContext && !!document.documentMo
               
             
               
-                <p>本文永久链接是：<a href=https://www.wdyyy.ltd/uncategorized/4a6bc6519d3b.html>https://www.wdyyy.ltd/uncategorized/4a6bc6519d3b.html</a></p>
+                <p>本文永久链接是：<a href=https://www.wdyyy.ltd/web%E5%BC%80%E5%8F%91/Vue3/10f067175270.html>https://www.wdyyy.ltd/web%E5%BC%80%E5%8F%91/Vue3/10f067175270.html</a></p>
               
             
           </blockquote>
@@ -887,7 +954,7 @@ if (/*@cc_on!@*/false || (!!window.MSInputMethodContext && !!document.documentMo
     <div class='new-meta-box'>
       
         
-          <div class="new-meta-item date" itemprop="dateUpdated" datetime="2021-06-29T11:38:21+08:00">
+          <div class="new-meta-item date" itemprop="dateUpdated" datetime="2021-06-29T00:00:00+08:00">
   <a class='notlink'>
     <i class="fas fa-edit fa-fw" aria-hidden="true"></i>
     <p>更新于：2021年6月29日</p>
@@ -898,6 +965,9 @@ if (/*@cc_on!@*/false || (!!window.MSInputMethodContext && !!document.documentMo
       
         
           
+  
+  <div class="new-meta-item meta-tags"><a class="tag" href="/tags/Vue3/" rel="nofollow"><i class="fas fa-hashtag fa-fw" aria-hidden="true"></i><p>Vue3</p></a></div> <div class="new-meta-item meta-tags"><a class="tag" href="/tags/Vite2/" rel="nofollow"><i class="fas fa-hashtag fa-fw" aria-hidden="true"></i><p>Vite2</p></a></div> <div class="new-meta-item meta-tags"><a class="tag" href="/tags/mockjs/" rel="nofollow"><i class="fas fa-hashtag fa-fw" aria-hidden="true"></i><p>mockjs</p></a></div>
+
 
         
       
@@ -909,11 +979,11 @@ if (/*@cc_on!@*/false || (!!window.MSInputMethodContext && !!document.documentMo
       
         <a class="-mob-share-qq" title="" rel="external nofollow noopener noreferrer noopener"
           
-          target="_blank" href="http://connect.qq.com/widget/shareqq/index.html?url=https://www.wdyyy.ltd/uncategorized/4a6bc6519d3b.html&title=Hello World - 冻羊的小屋&summary="
+          target="_blank" href="http://connect.qq.com/widget/shareqq/index.html?url=https://www.wdyyy.ltd/web%E5%BC%80%E5%8F%91/Vue3/10f067175270.html&title=在vite2和Vue3中配置Mockjs - 冻羊的小屋&summary=在 Vite2 与 Vue3 中使用Mockjs时有一些官方文档没有提到的注意点，特意做此记录。"
           
           >
           
-            <img src="https://cdn.jsdelivr.net/gh/volantis-x/cdn-org/logo/128/qq.png" class="lazyload placeholder" data-srcset="https://cdn.jsdelivr.net/gh/volantis-x/cdn-org/logo/128/qq.png" srcset="https://picbed-1259351214.cos.ap-shanghai.myqcloud.com/blog_assets/loading.gif">
+            <img src="https://cdn.jsdelivr.net/gh/volantis-x/cdn-org/logo/128/qq.png" class="lazyload placeholder" data-srcset="https://cdn.jsdelivr.net/gh/volantis-x/cdn-org/logo/128/qq.png" srcset="https://blog-static.cnblogs.com/files/blogs/665745/loading.gif">
           
         </a>
       
@@ -921,11 +991,11 @@ if (/*@cc_on!@*/false || (!!window.MSInputMethodContext && !!document.documentMo
       
         <a class="-mob-share-qzone" title="" rel="external nofollow noopener noreferrer noopener"
           
-          target="_blank" href="https://sns.qzone.qq.com/cgi-bin/qzshare/cgi_qzshare_onekey?url=https://www.wdyyy.ltd/uncategorized/4a6bc6519d3b.html&title=Hello World - 冻羊的小屋&summary="
+          target="_blank" href="https://sns.qzone.qq.com/cgi-bin/qzshare/cgi_qzshare_onekey?url=https://www.wdyyy.ltd/web%E5%BC%80%E5%8F%91/Vue3/10f067175270.html&title=在vite2和Vue3中配置Mockjs - 冻羊的小屋&summary=在 Vite2 与 Vue3 中使用Mockjs时有一些官方文档没有提到的注意点，特意做此记录。"
           
           >
           
-            <img src="https://cdn.jsdelivr.net/gh/volantis-x/cdn-org/logo/128/qzone.png" class="lazyload placeholder" data-srcset="https://cdn.jsdelivr.net/gh/volantis-x/cdn-org/logo/128/qzone.png" srcset="https://picbed-1259351214.cos.ap-shanghai.myqcloud.com/blog_assets/loading.gif">
+            <img src="https://cdn.jsdelivr.net/gh/volantis-x/cdn-org/logo/128/qzone.png" class="lazyload placeholder" data-srcset="https://cdn.jsdelivr.net/gh/volantis-x/cdn-org/logo/128/qzone.png" srcset="https://blog-static.cnblogs.com/files/blogs/665745/loading.gif">
           
         </a>
       
@@ -933,11 +1003,11 @@ if (/*@cc_on!@*/false || (!!window.MSInputMethodContext && !!document.documentMo
       
         <a class="-mob-share-weibo" title="" rel="external nofollow noopener noreferrer noopener"
           
-          target="_blank" href="http://service.weibo.com/share/share.php?url=https://www.wdyyy.ltd/uncategorized/4a6bc6519d3b.html&title=Hello World - 冻羊的小屋&summary="
+          target="_blank" href="http://service.weibo.com/share/share.php?url=https://www.wdyyy.ltd/web%E5%BC%80%E5%8F%91/Vue3/10f067175270.html&title=在vite2和Vue3中配置Mockjs - 冻羊的小屋&summary=在 Vite2 与 Vue3 中使用Mockjs时有一些官方文档没有提到的注意点，特意做此记录。"
           
           >
           
-            <img src="https://cdn.jsdelivr.net/gh/volantis-x/cdn-org/logo/128/weibo.png" class="lazyload placeholder" data-srcset="https://cdn.jsdelivr.net/gh/volantis-x/cdn-org/logo/128/weibo.png" srcset="https://picbed-1259351214.cos.ap-shanghai.myqcloud.com/blog_assets/loading.gif">
+            <img src="https://cdn.jsdelivr.net/gh/volantis-x/cdn-org/logo/128/weibo.png" class="lazyload placeholder" data-srcset="https://cdn.jsdelivr.net/gh/volantis-x/cdn-org/logo/128/weibo.png" srcset="https://blog-static.cnblogs.com/files/blogs/665745/loading.gif">
           
         </a>
       
@@ -945,9 +1015,9 @@ if (/*@cc_on!@*/false || (!!window.MSInputMethodContext && !!document.documentMo
       
         
         <div class='hoverbox'>
-          <a class='share'><img src="https://cdn.jsdelivr.net/gh/volantis-x/cdn-org/logo/128/wechat.png" class="lazyload placeholder" data-srcset="https://cdn.jsdelivr.net/gh/volantis-x/cdn-org/logo/128/wechat.png" srcset="https://picbed-1259351214.cos.ap-shanghai.myqcloud.com/blog_assets/loading.gif"></a>
+          <a class='share'><img src="https://cdn.jsdelivr.net/gh/volantis-x/cdn-org/logo/128/wechat.png" class="lazyload placeholder" data-srcset="https://cdn.jsdelivr.net/gh/volantis-x/cdn-org/logo/128/wechat.png" srcset="https://blog-static.cnblogs.com/files/blogs/665745/loading.gif"></a>
           <div class='target'>
-            <img src="data:image/png;base64,iVBORw0KGgoAAAANSUhEUgAAARgAAAEYCAAAAACi5bZQAAADCklEQVR42u3aSZLjMAwEQP//0zP3WUJAgXII6uTNtswldakA+Pll/HN8EIABAwYMGDBrYD7h+GvCP76/er66/tX/uvNdrQMGDBgwYMCA2QdTDkDhhq6eT9dNn/vvCwUDBgwYMGDArIW5DEBhkLv6f3c/adC8XA8MGDBgwIAB82Nh0gNUA1r3dzBgwIABAwYMmGogO9UAq+4jfXFgwIABAwYMmPfBpIWmaUGr28h7fCcSDBgwYMCAAfM1mGnQetrn+DxgwIABAwYMmDUw03EqIFYLXdP1L/cHBgwYMGDAgFkDc/oi0PT3auFq2uADAwYMGDBgwLwXptpQm8Kemme6XzBgwIABAwbMXpjuwumG4uDVPHB8gQkMGDBgwIABsw4mDXjVBlsXLF2/us7tyRcMGDBgwIABcztMutFuQ6260dMXkNoBEAwYMGDAgAGzBubbDbfuQdLAFu8LDBgwYMCAAbMO5lRAm8JWA10a5MadSDBgwIABAwbM42C6Da600JSCTA9efvFgwIABAwYMmLUw3UZcWpjqFq7uCpDlCh4YMGDAgAED5nEwVaD0Yk97Y4dH3HADAwYMGDBgwKyDmQa37rx3vaA0+IEBAwYMGDBg9sN0g1g1wKX/nzbe2heHwIABAwYMGDBrYNKLO92DpwdLG3PtFw4GDBgwYMCAWQPTbVClB2w3vobzp8+DAQMGDBgwYPbBnC4wpYWrUwWvdP9gwIABAwYMmPfAnCpElQPWsIDVbeCBAQMGDBgwYN4DkxaW0gtGdzXWuvsEAwYMGDBgwOyDmY5psPocGtUCV7nhBgYMGDBgwIB5PMzdG6lCdRt4aeGrXagCAwYMGDBgwDweJr340y00nSo4pcGyHfDAgAEDBgwYMGtg2hMND9RtiFUPngZIMGDAgAEDBgyY6cWgLlx1vsvvwYABAwYMGDA/DuZUAakL0Q2WXw94YMCAAQMGDJivwXQbbqfnSQ/ebeyBAQMGDBgwYN4DkzauugfsBsVpw61d2AIDBgwYMGDArIExwIABAwYMGDDLxm+xDujSvwOOiwAAAABJRU5ErkJggg==">
+            <img src="data:image/png;base64,iVBORw0KGgoAAAANSUhEUgAAATgAAAE4CAAAAADqFLC2AAADsklEQVR42u3aQXIbMQwEQP3/08o9KdUSA+waVpo3S1oKbPoAD/x6W9F6IQAHDhw4Cxy4JXCvcP39/Ol+nz73T4EX718e8HDf8nnBgQMHDhw4cOCWwT1V0NV+d13Q1HnBgQMHDhw4cOC2wlULmX7u6gBV0OpFXe4PDhw4cODAgQP3JXDVwPG0Ma42sFMNNzhw4MCBAwcO3P8Gd9eB0/27gSg4cODAgQMHDtxvgysPaIsD3+oBn67vsUk+OHDgwIEDBw7cEFx1pYVu+Tk+Lzhw4MCBAwcO3BK47no1V7exPQ1Ix84LDhw4cODAgQO3BK4bPE7/I9/V89362vWDAwcOHDhw4MAtgZsGSQe/1cb26ntOv/80oAUHDhw4cODAgdsGV36w+Pnq8+ngO4Ur1w8OHDhw4MCBA7cMrtoIVwGmVvcCT98/boDBgQMHDhw4cOCWwN0VHHYDx26jfBqQXu4PDhw4cODAgQO3FK47CJ6+gC5QFezydXDgwIEDBw4cuGVwaYM41UhXG+Q0AK02vMeTfHDgwIEDBw4cuIfh0gZ2aqCdNrrpPmld4MCBAwcOHDhwW+GqG5++fvp+dZ+pn8t/CIADBw4cOHDgwC2Fe2rAXD1Itd50gH1ZFzhw4MCBAwcO3DK49CBpIFk9QDWYrMIeXwg4cODAgQMHDtwyuC5YtcCpAHO67rEgExw4cODAgQMH7ma42wK/mxvaNHhtB6TgwIEDBw4cOHDL4KpBYDogTi/gLvjyOcGBAwcOHDhw4JbAVQutDnq7DXU6eL5tX3DgwIEDBw4cuCVw3UYxbUirDXUaPKaNdPyXAzhw4MCBAwcO3MNwVah0ANwdaFcPPjVABwcOHDhw4MCB+y1waYHVoHMKrFvv8S8EOHDgwIEDBw7cErhq41oNPKsD47SxTS8wDjLBgQMHDhw4cOCWwk01wOnAujson/rF+BhkggMHDhw4cODA/TBcN/hLB87VhjQdkE9dEDhw4MCBAwcO3Da47uo2pncNwLsD8o+vgwMHDhw4cODALYG7O1A8PVgaSKbg4MCBAwcOHDhw3wKXFjwVHJ5CVsHTej9+Hhw4cODAgQMHbilceUAbBplpAJledPfCwIEDBw4cOHDgvg0uLXAacGqQffk94MCBAwcOHDhwXwqXfq468O4OwN/hAgcOHDhw4MCB2wqXDqTT4LPb8L6bqzwQBwcOHDhw4MCBWwY3FUR2G99qQ5wCVgNZcODAgQMHDhy4bXBWGGRa4MCBA2eBA/cz6w8VhgAm25nzEgAAAABJRU5ErkJggg==">
           </div>
         </div>
       
@@ -969,19 +1039,11 @@ if (/*@cc_on!@*/false || (!!window.MSInputMethodContext && !!document.documentMo
   
     <div class="prev-next">
       
-        <a class='prev' href='/%E6%96%87%E7%8C%AE%E8%A7%A3%E8%AF%BB/QTL%E5%88%86%E6%9E%90/27a16a8134c5.html'>
+        <a class='prev' href='/%E7%94%9F%E7%89%A9%E4%BF%A1%E6%81%AF%E5%AD%A6/%E6%96%87%E7%8C%AE%E8%A7%A3%E8%AF%BB/27a16a8134c5.html'>
           <p class='title'><i class="fas fa-chevron-left" aria-hidden="true"></i>A到I的RNA编辑中的遗传变异与microRNA的靶向可以调节人类转录组</p>
           <p class='content'>邢毅教授团队在Genome Biology上发表了一篇名为 A到I的RNA编辑中的遗传变异与microRNA的靶向可以调节人类转录组 的文章，揭示了A-to-I的RNA编辑与遗传变异的关系，并发...</p>
         </a>
       
-      
-        <a class='next' href='/web/Vue3/10f067175270.html'>
-          <p class='title'>在vite2和Vue3中配置Mockjs<i class="fas fa-chevron-right" aria-hidden="true"></i></p>
-          <p class='content'>在 Vite2 与 Vue3 中使用Mockjs时有一些官方文档没有提到的注意点，特意做此记录。
-
-
-1. MockJS 依赖的安装mockjs是一个用来拦截Ajax请求的工具，在做开发时，当后...</p>
-        </a>
       
     </div>
   
@@ -1023,7 +1085,7 @@ if (/*@cc_on!@*/false || (!!window.MSInputMethodContext && !!document.documentMo
 
 
     <div class='content'>
-        <ol class="toc"><li class="toc-item toc-level-2"><a class="toc-link" href="#Quick-Start"><span class="toc-text">Quick Start</span></a><ol class="toc-child"><li class="toc-item toc-level-3"><a class="toc-link" href="#Create-a-new-post"><span class="toc-text">Create a new post</span></a></li><li class="toc-item toc-level-3"><a class="toc-link" href="#Run-server"><span class="toc-text">Run server</span></a></li><li class="toc-item toc-level-3"><a class="toc-link" href="#Generate-static-files"><span class="toc-text">Generate static files</span></a></li><li class="toc-item toc-level-3"><a class="toc-link" href="#Deploy-to-remote-sites"><span class="toc-text">Deploy to remote sites</span></a></li></ol></li></ol>
+        <ol class="toc"><li class="toc-item toc-level-2"><a class="toc-link" href="#MockJS-%E4%BE%9D%E8%B5%96%E7%9A%84%E5%AE%89%E8%A3%85"><span class="toc-text">MockJS 依赖的安装</span></a></li><li class="toc-item toc-level-2"><a class="toc-link" href="#%E5%9C%A8-package-json-%E4%B8%AD%E8%AE%BE%E7%BD%AE%E7%8E%AF%E5%A2%83%E5%8F%98%E9%87%8F"><span class="toc-text">在 package.json 中设置环境变量</span></a></li><li class="toc-item toc-level-2"><a class="toc-link" href="#%E5%9C%A8-vite-config-js-%E4%B8%AD%E6%B7%BB%E5%8A%A0-mockjs-%E6%8F%92%E4%BB%B6"><span class="toc-text">在 vite.config.js 中添加 mockjs 插件</span></a></li><li class="toc-item toc-level-2"><a class="toc-link" href="#%E5%9C%A8%E9%A1%B9%E7%9B%AE%E4%B8%AD%E5%88%9B%E5%BB%BA-mock-%E6%96%87%E4%BB%B6%E5%A4%B9%EF%BC%8C%E5%9C%A8%E5%85%B6%E4%B8%AD%E5%88%9B%E5%BB%BA%E9%9C%80%E8%A6%81%E7%9A%84%E6%95%B0%E6%8D%AE%E6%8E%A5%E5%8F%A3"><span class="toc-text">在项目中创建 mock 文件夹，在其中创建需要的数据接口</span></a></li><li class="toc-item toc-level-2"><a class="toc-link" href="#%E5%9C%A8%E9%A1%B9%E7%9B%AE%E4%B8%AD%E4%BD%BF%E7%94%A8%E6%AD%A4%E6%8E%A5%E5%8F%A3"><span class="toc-text">在项目中使用此接口</span></a></li></ol>
     </div>
   </section>
 
@@ -1042,7 +1104,7 @@ if (/*@cc_on!@*/false || (!!window.MSInputMethodContext && !!document.documentMo
 <script>
   window.pdata={}
   pdata.ispage=true;
-  pdata.postTitle="Hello World";
+  pdata.postTitle="在vite2和Vue3中配置Mockjs";
   pdata.commentPath="";
   pdata.commentPlaceholder="";
   // header 这里无论是否开启pjax都需要
